@@ -1,0 +1,3000 @@
+/* Component styles. Every value here comes from the handoff's spec sections. */
+
+.app-status {
+  margin: 0;
+  padding: 40px 20px;
+  color: var(--ink3);
+  font-size: 13px;
+}
+.app-status--error {
+  color: var(--danger);
+}
+.app-banner {
+  margin: 0;
+  padding: 8px 20px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 12px;
+  border-bottom: 1px solid var(--line2);
+}
+
+/* ----------------------------------------------------------------- header */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  background: var(--surf);
+  border-bottom: 1px solid var(--line2);
+  flex-shrink: 0;
+}
+.app-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.app-header__wordmark {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.app-header__week {
+  font-size: 12px;
+  color: var(--ink3);
+  white-space: nowrap;
+}
+/* the filtered card count, beside the week stamp rather than on its own filters line */
+.app-header__count {
+  font-size: 12px;
+  color: var(--ink3);
+  white-space: nowrap;
+}
+.app-header__count::before {
+  content: '·';
+  margin-right: 8px;
+  color: var(--ink4);
+}
+.app-header__search {
+  /* The whole control cluster sits right: search, then Filters, then the theme
+     toggle. margin-left:auto on the first of them pushes the group over. */
+  margin-left: auto;
+  display: flex;
+  justify-content: flex-end;
+  min-width: 0;
+}
+.app-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 340px;
+  min-width: 280px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf);
+  color: var(--ink2);
+}
+.search-field input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  font-size: 13px;
+  color: var(--ink);
+}
+.search-field input::placeholder {
+  color: var(--ink4);
+}
+.search-field input:focus {
+  outline: none;
+}
+.search-field:focus-within {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+/* ---------------------------------------------------------------- buttons */
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--surf);
+  color: var(--ink2);
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+}
+.icon-button:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+.icon-button--sm {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  background: transparent;
+}
+.icon-button--xs {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  background: transparent;
+}
+
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: 12px;
+  font-weight: 600;
+  transition: background var(--t-fast);
+}
+.primary-button:hover {
+  background: var(--ink-hover);
+}
+
+.chip-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf);
+  color: var(--ink2);
+  font-size: 12px;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.chip-button:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+.chip-button__count {
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 2px;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: 9px;
+  line-height: 16px;
+  text-align: center;
+}
+
+.text-button {
+  border: 0;
+  background: transparent;
+  color: var(--ink2);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 4px;
+  border-radius: 2px;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.text-button:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+
+.ghost-button,
+.danger-button {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background var(--t-fast);
+}
+.ghost-button {
+  border: 1px solid var(--line2);
+  background: var(--surf);
+  color: var(--ink2);
+}
+.ghost-button:hover {
+  background: var(--ink-a06);
+}
+.danger-button {
+  border: 0;
+  background: var(--danger-solid);
+  color: var(--on-color);
+}
+.danger-button:hover {
+  background: var(--danger-solid-hover);
+}
+
+/* a panel button's drop-down: it floats over the panel, right-aligned to its button */
+.menu-button {
+  position: relative;
+}
+.menu-button .panel__button[data-open] {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+.menu {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 4px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 190px;
+  padding: 3px;
+  border: 1px solid var(--line2);
+  border-radius: 4px;
+  background: var(--surf);
+  box-shadow: 0 6px 18px var(--shadow);
+}
+.menu__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  color: var(--ink);
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.menu__item:hover {
+  background: var(--ink-a06);
+}
+/* a fill rather than the global ring, which would clip against the menu's 3px inset */
+.menu__item:focus-visible {
+  outline: none;
+  background: var(--ink-a10);
+}
+.menu__check {
+  margin-left: auto;
+  color: var(--ink2);
+}
+
+/* ---------------------------------------------------------------- filters */
+
+.filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+  padding: 8px 20px;
+  background: var(--surf);
+  border-bottom: 1px solid var(--line2);
+  flex-shrink: 0;
+}
+.filters-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+/* Objectives get their own line: there can be many, and they are the widest chips. */
+.filters-group--row {
+  flex-basis: 100%;
+}
+.filters-group__title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink3);
+  margin-right: 4px;
+}
+
+.filter-chip {
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--line2);
+  border-radius: 2px;
+  background: var(--surf);
+  color: var(--ink2);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.filter-chip:hover {
+  background: var(--ink-a06);
+}
+.filter-chip[data-active] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--surf);
+}
+
+/* priority carries its glyph, so the chip reads the same as the card mark */
+.prio-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--line2);
+  border-radius: 4px;
+  background: var(--surf);
+  color: var(--ink2);
+  font-size: 11px;
+  font-weight: 600;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.prio-chip:hover {
+  background: var(--ink-a06);
+}
+.prio-chip[data-active] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--on-ink);
+}
+
+.flag-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--line2);
+  border-radius: 2px;
+  background: var(--surf);
+  color: var(--ink2);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.flag-chip--icon {
+  width: 26px;
+  padding: 0;
+  justify-content: center;
+}
+.flag-chip:hover {
+  background: var(--ink-a06);
+}
+.flag-chip[data-active] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--surf);
+}
+
+/* label edit mode: rename in place, × removes, dashed field adds */
+.label-edit {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 4px 0 8px;
+  border-radius: 999px;
+  border: 1px solid oklch(var(--chip-l-border) var(--chip-c-border) var(--chip-h));
+  background: oklch(var(--chip-l-bg) var(--chip-c-bg) var(--chip-h));
+}
+.label-edit__input {
+  width: 74px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: oklch(var(--chip-l-text) var(--chip-c-text) var(--chip-h));
+}
+.label-edit__remove {
+  width: 16px;
+  height: 18px;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+  line-height: 1;
+  color: oklch(var(--chip-l-text) var(--chip-c-text) var(--chip-h));
+}
+.label-new {
+  width: 110px;
+  height: 22px;
+  padding: 0 10px;
+  border: 1px dashed var(--ink4);
+  border-radius: 999px;
+  background: var(--surf);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.filters-edit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--surf2);
+  color: var(--ink3);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.filters-edit:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+.filters-edit[aria-pressed='true'] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--on-ink);
+}
+
+/*
+ * Glyphs inside filter chips carry the same colours as the marks on the cards, so
+ * the control and the thing it filters read as one. An active chip inverts to the
+ * ink fill, where those hues would not have contrast.
+ */
+.chip-glyph {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink3);
+}
+.chip-glyph[data-tone='danger'] {
+  color: var(--danger);
+}
+.prio-chip[data-prio='P1'] .chip-glyph {
+  color: var(--danger);
+}
+.prio-chip[data-prio='P2'] .chip-glyph {
+  color: var(--warn);
+}
+.prio-chip[data-prio='P3'] .chip-glyph {
+  color: var(--ink3);
+}
+/* Must outrank .prio-chip[data-prio='P1'] .chip-glyph (0,3,0), hence the extra
+   attribute — on the ink fill those hues have no contrast. */
+.prio-chip[data-prio][data-active] .chip-glyph,
+.flag-chip[data-active] .chip-glyph {
+  color: inherit;
+}
+
+/*
+ * Label chips derive their whole palette from one hashed hue (--chip-h) and the
+ * theme's chip lightness/chroma tokens, so a new label needs no new CSS.
+ */
+/*
+ * Labels are pills; objectives and the other filter chips stay rectangular. The
+ * shape alone separates "tag on a card" from "goal this card serves", which the
+ * colour cannot do — labels are already every hue.
+ */
+.label-chip {
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid oklch(var(--chip-l-border) var(--chip-c-border) var(--chip-h));
+  background: oklch(var(--chip-l-bg) var(--chip-c-bg) var(--chip-h));
+  color: oklch(var(--chip-l-text) var(--chip-c-text) var(--chip-h));
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.label-chip[data-active] {
+  background: oklch(var(--chip-l-active) var(--chip-c-active) var(--chip-h));
+  border-color: oklch(var(--chip-l-active) var(--chip-c-active) var(--chip-h));
+  color: var(--chip-text-active);
+}
+.label-chip--static {
+  height: 16px;
+  padding: 0 7px;
+  font-size: 9px;
+  cursor: default;
+}
+
+/* -------------------------------------------------------------- workspace */
+
+.workspace {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.activity-bar {
+  width: 48px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding-top: 6px;
+  background: var(--surf);
+  border-right: 1px solid var(--line2);
+}
+.activity-bar__button {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--ink3);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.activity-bar__button:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+.activity-bar__button[data-active] {
+  background: var(--ink-a06);
+  color: var(--ink);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.side-panel {
+  flex-shrink: 1;
+  min-width: 0;
+  display: flex;
+  background: var(--surf);
+  border-right: 1px solid var(--line2);
+  transition: width var(--t-panel);
+  overflow: hidden;
+}
+
+/* list pane */
+.panel {
+  flex: 1 1 520px;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.panel__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--line);
+}
+.panel__rule {
+  display: block;
+  width: 32px;
+  height: 4px;
+  background: var(--accent);
+  margin-bottom: 8px;
+}
+.panel__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+.panel__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.panel__count {
+  font-size: 11px;
+  color: var(--ink3);
+}
+.panel__button {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf);
+  color: var(--ink2);
+  font-size: 14px;
+  line-height: 1;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.panel__button:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+.panel__body {
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+}
+.panel__empty {
+  margin: 0;
+  padding: 16px 24px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink3);
+}
+.panel__empty code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.year-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 24px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--surf2);
+  text-align: left;
+  transition: background var(--t-fast);
+}
+.year-row:hover {
+  background: var(--surf3);
+}
+.year-row__chevron {
+  width: 10px;
+  font-size: 10px;
+  color: var(--ink3);
+}
+.year-row__year {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+.year-row__summary {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+.obj-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--line);
+  border-left: 3px solid transparent;
+  background: var(--surf);
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.obj-row:hover {
+  background: var(--surf2);
+}
+.obj-row[data-selected] {
+  border-left-color: var(--ink);
+  background: var(--surf3);
+}
+.obj-row__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.obj-row__name {
+  flex: 1;
+  min-width: 0;
+  color: var(--ink);
+}
+.obj-row__measure {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink2);
+  text-wrap: pretty;
+}
+.obj-row__counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 11px;
+  color: var(--ink3);
+}
+.obj-row__counts span {
+  white-space: nowrap;
+}
+.obj-row__outcomes {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 2px;
+  font-size: 11px;
+  color: var(--accent);
+}
+
+/*
+ * Day-granularity activity map: one row of 1-day cells, today at the right edge. The
+ * cell count comes from the data (ACTIVITY_MAP_DAYS), so the CSS never restates it.
+ * Empty days read as a rule, busier days deepen toward accent.
+ */
+.heat {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+  height: 10px;
+}
+.heat__cell {
+  min-width: 0;
+  border-radius: 1px;
+}
+
+/* outcome rows */
+.out-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--line);
+  border-left: 3px solid transparent;
+  background: var(--surf);
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.out-row:hover {
+  background: var(--surf2);
+}
+.out-row[data-selected] {
+  border-left-color: var(--ink);
+  background: var(--surf3);
+}
+.out-row__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.out-row__name {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.out-row__desc {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink2);
+  text-wrap: pretty;
+}
+.out-row__foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+/* ------------------------------------------------------------- log panel */
+
+.log-scope {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.log-scope__segs {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf3);
+}
+.log-scope__segs button {
+  height: 24px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink2);
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.log-scope__segs button:hover {
+  background: var(--ink-a06);
+}
+.log-scope__segs button[data-active] {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+.log-scope__step {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+.log-scope__step .panel__button {
+  width: auto;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  font-size: 11px;
+}
+
+.log-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.log-summary__label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.log-summary__metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 26px;
+}
+.log-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.log-metric__value {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.log-metric__value[data-accent] {
+  color: var(--accent);
+}
+.log-metric__label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+/* one stacked bar for the period's type mix; the legend below names the bands */
+.log-types {
+  display: flex;
+  gap: 1px;
+  height: 6px;
+  border-radius: 1px;
+  background: var(--line);
+  overflow: hidden;
+}
+.log-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.log-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--ink3);
+}
+.log-legend__item .mono {
+  color: var(--ink2);
+}
+.log-legend__swatch {
+  width: 10px;
+  height: 6px;
+}
+
+/* ------------------------------------- artefacts / values (a Log tool) */
+
+.tok-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.tok-filter {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+/* the kind has three short options, so it does not need an equal share */
+.tok-filter--kind {
+  flex: 0 0 92px;
+}
+.tok-filter select {
+  width: 100%;
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf);
+  font: inherit;
+  font-size: 12px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.tok-filter select:hover {
+  background: var(--surf2);
+}
+.tok-filters .mini-button {
+  flex-shrink: 0;
+  height: 26px;
+}
+
+/* one row per occurrence: the date leads, because the list is a chronology */
+.tok-row {
+  display: flex;
+  gap: 12px;
+  padding: 9px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.tok-row__date {
+  width: 46px;
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--ink3);
+}
+.tok-row__body {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 5px;
+}
+/*
+ * The token wears the activity log's own chip, so an artefact looks the same on a
+ * card as it does here. Only the wrapping differs: names are long and the pane is
+ * narrow, and the log's entry rows are wider than this column.
+ */
+.tok-row .token {
+  align-self: flex-start;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+.tok-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+/* the card it came from — the audit trail behind the claim */
+.tok-row__task {
+  max-width: 100%;
+  overflow: hidden;
+  padding: 1px 6px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  color: var(--ink3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--t-fast),
+    color var(--t-fast);
+}
+.tok-row__task:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+/* the objective reads quieter than the outcome chip: it is inherited, not attributed */
+.tok-row__objective {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--ink4);
+}
+
+/*
+ * A Log tool's pane wears the editor pane's shell. It holds a list rather than a form,
+ * so its body is a plain scroller whose rows run edge to edge, not the editor's padded
+ * column.
+ */
+/*
+ * Title over meta, sized to the Log header's content beside it (rule 4 + gap 8 + a 16px
+ * title at the base 1.4 line height), so the two headers share one bottom rule. A
+ * near-miss of a couple of pixels reads as a mistake where a clear difference would not.
+ */
+.log-pane__heading {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  height: calc(12px + 16px * 1.4);
+}
+.log-pane__meta {
+  font-size: 11px;
+  color: var(--ink3);
+}
+.log-pane__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+/*
+ * One card worked on in the period: its title and hours, then where it sits and how
+ * often it was touched. Two lines, because the pane is too narrow for four columns, and
+ * titles wrap rather than truncate — which cards moved is the whole point of the list.
+ */
+.log-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 3px 12px;
+  width: 100%;
+  padding: 9px 20px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.log-card:hover {
+  background: var(--ink-a06);
+}
+.log-card__title {
+  font-size: 12px;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+/* archived work still counts toward the period, so it is marked, not hidden */
+.log-card__archived {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 4px;
+  border: 1px solid var(--line2);
+  border-radius: 2px;
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+  color: var(--ink3);
+}
+.log-card__hours {
+  font-size: 12px;
+  color: var(--ink2);
+}
+.log-card__meta {
+  grid-column: 1 / -1;
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+/* a summary row: click drills Year → Month → Week */
+.log-bucket {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 20px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.log-bucket:hover {
+  background: var(--surf2);
+}
+.log-bucket__label {
+  width: 96px;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.log-bucket__bar {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  height: 6px;
+  background: var(--line);
+}
+.log-bucket__bar span {
+  background: var(--accent);
+}
+.log-bucket__count {
+  width: 66px;
+  flex-shrink: 0;
+  text-align: right;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--ink);
+}
+.log-bucket__hours {
+  width: 46px;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 12px;
+  color: var(--ink3);
+}
+.log-bucket__chevron {
+  font-size: 12px;
+  color: var(--ink4);
+}
+/* an empty period still holds its row, but stops competing for attention */
+.log-bucket[data-empty] .log-bucket__label,
+.log-bucket[data-empty] .log-bucket__count {
+  color: var(--ink4);
+}
+
+/*
+ * A day is the unit a Week is read in, so its header is a band, not a label: title
+ * case against the uppercase section labels, and sticky, so the day being read stays
+ * named while its entries scroll beneath it. The band is opaque for the same reason.
+ */
+.log-day {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--line2);
+  background: var(--surf3);
+}
+.log-day__label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.log-day__summary {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+.log-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  width: 100%;
+  padding: 9px 20px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.log-entry:hover {
+  background: var(--surf2);
+}
+.log-entry__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.log-entry__type {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.log-entry__task {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  color: var(--ink3);
+}
+.log-entry__hours {
+  font-size: 11px;
+  color: var(--ink3);
+}
+.log-entry__note {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.log-entry__outcomes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* objective picker: an indented radio tree, since the nesting is the point */
+.radio-tree {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf);
+  overflow: hidden auto;
+  max-height: 220px;
+}
+.radio-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--surf);
+  text-align: left;
+  transition: background var(--t-fast);
+}
+.radio-row:last-child {
+  border-bottom: 0;
+}
+.radio-row:hover {
+  background: var(--surf3);
+}
+.radio-row[data-checked] {
+  background: var(--accent-wash);
+}
+/* a square box, not a radio dot: the link is many-to-many */
+.radio-row__box {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  border: 1px solid var(--line2);
+  background: var(--surf);
+}
+.radio-row[data-checked] .radio-row__box {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.radio-row__name {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.radio-row__meta {
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  white-space: nowrap;
+}
+
+/* the pane beside a panel's list: an objective or outcome editor, or a Log tool */
+.editor {
+  flex: 1 1 380px;
+  min-width: 280px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--line);
+  background: var(--surf2);
+}
+.editor__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.editor__title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.editor__body {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 20px;
+}
+.editor__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.editor__field-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.editor__field-head .mini-button {
+  margin-left: auto;
+}
+.editor__input {
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf);
+  font-size: 13px;
+  color: var(--ink);
+  padding: 0 8px;
+}
+.editor__input--name {
+  font-weight: 600;
+}
+.editor__measure {
+  height: auto;
+  min-height: 96px;
+  padding: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  resize: vertical;
+}
+.editor__note {
+  margin: 0;
+  font-size: 11px;
+  color: var(--ink3);
+}
+.mini-button {
+  height: 22px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf);
+  font-size: 11px;
+  color: var(--ink2);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.mini-button:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+
+.workspace__board {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+}
+
+/* ------------------------------------------------------------------ board */
+
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+.intake {
+  border: 1px solid var(--line2);
+  border-top: 3px solid var(--lane7);
+  border-radius: 4px;
+  background: var(--panel);
+  overflow: hidden;
+}
+.intake__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--head);
+}
+.intake__title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.intake__count {
+  font-size: 11px;
+  color: var(--ink3);
+}
+.intake__hint {
+  font-size: 11px;
+  color: var(--ink4);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.intake__canvas {
+  position: relative;
+  overflow: auto;
+  transition: background var(--t-fast);
+}
+.intake__canvas[data-over] {
+  background: var(--accent-wash);
+}
+.intake__empty {
+  margin: 0;
+  padding: 20px;
+  font-size: 12px;
+  color: var(--ink4);
+}
+.intake__resize {
+  height: 8px;
+  cursor: ns-resize;
+  background: var(--head);
+  border-top: 1px solid var(--line);
+}
+.intake__resize:hover {
+  background: var(--ink-a06);
+}
+
+.lane {
+  border: 1px solid var(--line2);
+  border-top: 3px solid var(--lane1);
+  border-radius: 4px;
+  background: var(--panel);
+  overflow: hidden;
+}
+.lane[data-drop-edge='top'] {
+  box-shadow: inset 0 3px 0 var(--ink);
+}
+.lane[data-drop-edge='bottom'] {
+  box-shadow: inset 0 -3px 0 var(--ink);
+}
+.lane__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  cursor: grab;
+}
+.lane__grip {
+  color: var(--ink4);
+  display: inline-flex;
+}
+.lane__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  padding: 2px 6px;
+  margin: 0 -6px;
+  border-radius: 3px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  transition: background var(--t-fast);
+}
+.lane__title:hover {
+  background: var(--ink-a06);
+}
+.lane__rename {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lane__swatches {
+  display: flex;
+  gap: 4px;
+}
+.lane__swatch {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px var(--line2);
+}
+.lane__swatch[data-current] {
+  box-shadow: 0 0 0 2px var(--ink);
+}
+.lane__count {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink3);
+}
+.lane__hint {
+  font-size: 11px;
+  color: var(--ink3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+}
+.lane__stats {
+  margin-left: auto;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--ink3);
+}
+.lane__stat {
+  white-space: nowrap;
+}
+.lane__stat--warn {
+  color: var(--warn);
+}
+
+/*
+ * Lane and column delete. Rare and destructive, so it recedes almost to nothing and
+ * comes forward only when its header is hovered, when it is hovered itself, or when
+ * it takes keyboard focus — never invisible, just quiet.
+ */
+.tile-button {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--ink4);
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0.25;
+  transition: opacity var(--t-fast), background var(--t-fast), color var(--t-fast);
+}
+.lane__header:hover .tile-button,
+.column__header:hover .tile-button {
+  opacity: 0.55;
+}
+/* Parents named so this outranks the header-hover rule above, which is 0,3,0. */
+.lane__header .tile-button:hover,
+.lane__header .tile-button:focus-visible,
+.column__header .tile-button:hover,
+.column__header .tile-button:focus-visible {
+  opacity: 1;
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.inline-rename {
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid var(--line2);
+  border-radius: 2px;
+  background: var(--surf);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.lane__columns {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  align-items: stretch;
+  min-height: 120px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.column {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  transition: background var(--t-fast);
+}
+.column[data-over] {
+  background: var(--ink-a06);
+}
+.column__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+}
+.column__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  padding: 2px 5px;
+  margin: 0 -5px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink2);
+  transition: background var(--t-fast);
+}
+.column__title:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+.column__count {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink3);
+}
+.column__delete {
+  margin-left: auto;
+}
+
+/* collapsed column: a 34px strip that is still a drop target */
+.column-strip {
+  flex: 0 0 34px;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf2);
+  color: var(--ink2);
+  transition: background var(--t-fast);
+}
+.column-strip:hover {
+  background: var(--ink-a06);
+}
+.column-strip__count {
+  font-size: 11px;
+  color: var(--ink3);
+}
+.column-strip__name {
+  writing-mode: vertical-rl;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.add-column {
+  flex: 0 0 34px;
+  align-self: stretch;
+  margin: 2px 6px 10px;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: 1px dashed var(--line2);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink3);
+  font-size: 14px;
+  line-height: 1;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.add-column:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+.add-column__label {
+  writing-mode: vertical-rl;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.column__cards {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 4px 12px;
+  /* room to double-click below the last card */
+  min-height: 72px;
+}
+
+.add-lane {
+  height: 22px;
+  border: 1px dashed var(--line2);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink3);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.add-lane:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------------- card */
+
+.card {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf);
+  overflow: hidden;
+  cursor: grab;
+  transition: border-color var(--t-fast);
+  text-align: left;
+}
+.card:hover {
+  border-color: var(--ink);
+}
+/* An obstacle is marked by the warning glyph alone — tinting the whole card made
+   every blocked item shout, which drowned out severity and overdue. */
+.card__body {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* title left, marks top-right */
+.card__head {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.card__title {
+  display: block;
+  min-width: 0;
+  min-height: 35px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.card__marks {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.card__sev {
+  font-size: 11px;
+  line-height: 1;
+  color: var(--danger);
+}
+.card__obstacle {
+  display: inline-flex;
+  color: var(--danger);
+}
+.card__prio {
+  display: inline-flex;
+}
+/* P2 is the default and deliberately unmarked, so only P1 and P3 appear */
+.card__prio[data-prio='P1'] {
+  color: var(--danger);
+}
+.card__prio[data-prio='P3'] {
+  color: var(--ink3);
+}
+
+.card__labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+.card__label {
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid oklch(var(--chip-l-border) var(--chip-c-border) var(--chip-h));
+  background: oklch(var(--chip-l-bg) var(--chip-c-bg) var(--chip-h));
+  color: oklch(var(--chip-l-text) var(--chip-c-text) var(--chip-h));
+}
+
+/* footer band, bled to the card edges by negative margins */
+.card__links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 3px -9px -7px;
+  padding: 6px 9px;
+  background: var(--ink-a06);
+  border-top: 1px solid var(--ink-a10);
+}
+/* icon-prefixed, so an objective is never mistaken for the "→ outcome" beneath it */
+.card__objective {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--ink2);
+}
+.card__objective svg {
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+.card__outcome {
+  font-size: 11px;
+  color: var(--accent);
+}
+
+/* ----------------------------------------------------------------- dialog */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--scrim);
+  z-index: 40;
+}
+.dialog {
+  width: min(440px, calc(100vw - 40px));
+  padding: 20px;
+  border-radius: 4px;
+  background: var(--surf);
+  box-shadow: 0 1px 2px var(--shadow);
+}
+.dialog__title {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.dialog__body {
+  margin: 0 0 14px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink2);
+}
+.dialog__choices {
+  margin: 0 0 16px;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dialog__choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ------------------------------------------------------------ empty states */
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--ink3);
+}
+.empty--board {
+  align-items: center;
+  text-align: center;
+  padding: 28px 20px;
+  border: 1px dashed var(--line2);
+  border-radius: 4px;
+}
+.empty__line {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink2);
+}
+.empty__hint {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink4);
+}
+
+/* ------------------------------------------------------------- card modal */
+
+.scrim--modal {
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 24px;
+  overflow: auto;
+}
+
+.modal {
+  width: 1040px;
+  max-width: 100%;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  box-shadow: 0 1px 2px var(--shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px 9px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surf2);
+  flex-wrap: wrap;
+}
+.modal__lane {
+  height: 24px;
+  max-width: 260px;
+  padding: 0 4px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.modal__lane:hover {
+  border-color: var(--line2);
+  background: var(--surf);
+}
+.modal__header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.modal__close {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf);
+  color: var(--ink2);
+  font-size: 15px;
+  line-height: 1;
+  transition: background var(--t-fast);
+}
+.modal__close:hover {
+  background: var(--surf2);
+}
+
+.state-segs {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf3);
+}
+.state-segs button {
+  height: 24px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--ink2);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.state-segs button:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+.state-segs button[data-active] {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.modal__main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+}
+.modal__write {
+  min-width: 0;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-right: 1px solid var(--line);
+}
+.modal__title {
+  width: 100%;
+  font-size: 18px;
+  font-weight: 600;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 4px 0;
+  background: transparent;
+  color: var(--ink);
+}
+.modal__title:focus {
+  outline: none;
+  border-bottom-color: var(--ink);
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.block__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.block__modes {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+.mode-chip {
+  height: 22px;
+  padding: 0 10px;
+  border: 1px solid var(--line2);
+  border-radius: 2px;
+  background: var(--surf);
+  color: var(--ink2);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.mode-chip:hover {
+  background: var(--ink-a06);
+}
+.mode-chip[data-active] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--on-ink);
+}
+.block__input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--surf);
+  resize: vertical;
+}
+.block__preview {
+  width: 100%;
+  min-height: 132px;
+}
+.block__preview--short {
+  min-height: 66px;
+}
+
+.rail-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+.rail-label[data-danger] {
+  color: var(--danger);
+}
+
+.modal__rail {
+  min-width: 0;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--surf2);
+}
+.rail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* the thumb slides between options rather than each option repainting */
+.sliding {
+  position: relative;
+  height: 28px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf3);
+  display: grid;
+}
+.sliding__thumb {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  border-radius: 3px;
+  background: var(--ink);
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sliding button {
+  position: relative;
+  z-index: 1;
+  height: 22px;
+  border: 0;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--ink2);
+  transition: color var(--t-fast);
+}
+.sliding button[data-active] {
+  color: var(--on-ink);
+}
+
+.rail-date {
+  width: 100%;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf);
+  font-size: 12px;
+  padding: 0 8px;
+  color: var(--ink);
+}
+.rail-newlabel {
+  width: 100%;
+  height: 24px;
+  border: 1px dashed var(--ink4);
+  border-radius: 2px;
+  background: var(--surf);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink);
+  padding: 0 6px;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.modal__links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--line);
+}
+.link-col {
+  min-width: 0;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-right: 1px solid var(--line);
+}
+.link-col--last {
+  border-right: 0;
+}
+.link-col__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.link-col__count {
+  font-size: 11px;
+  color: var(--ink3);
+}
+.link-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.link-list__empty {
+  margin: 0;
+  padding: 10px;
+  font-size: 12px;
+  color: var(--ink3);
+}
+.link-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--surf);
+  text-align: left;
+  transition: background var(--t-fast);
+}
+.link-row:last-child {
+  border-bottom: 0;
+}
+.link-row:hover {
+  background: var(--ink-a06);
+}
+.link-row[data-checked] {
+  background: var(--accent-wash);
+}
+/* In the objective editor the row splits: the box toggles the link, the name renames. */
+.link-row__toggle {
+  display: flex;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+.link-row__rename {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  font-size: 12px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.link-row__rename:hover {
+  text-decoration: underline;
+}
+.link-row--editing {
+  background: var(--surf3);
+}
+.link-row--editing .inline-rename {
+  flex: 1;
+  min-width: 0;
+  height: 22px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.link-row__box {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  border: 1px solid var(--line2);
+  background: var(--surf);
+}
+/* checked state belongs to the box inside the row, not to every box */
+.link-row[data-checked] .link-row__box {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+/* In the objective editor the row splits: the box toggles the link, the name renames. */
+.link-row__toggle {
+  display: flex;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+.link-row__rename {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  font-size: 12px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.link-row__rename:hover {
+  text-decoration: underline;
+}
+.link-row--editing {
+  background: var(--surf3);
+}
+.link-row--editing .inline-rename {
+  flex: 1;
+  min-width: 0;
+  height: 22px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.link-row__name {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.link-row__meta {
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  white-space: nowrap;
+}
+
+.modal__log {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px 20px;
+  border-top: 1px solid var(--line);
+  background: var(--surf2);
+}
+.modal__log-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.modal__log-count {
+  font-size: 12px;
+  color: var(--ink2);
+}
+.modal__log-attr {
+  color: var(--accent);
+}
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf);
+  padding: 12px;
+}
+.composer__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.type-chip {
+  height: 30px;
+  padding: 0 14px;
+  border: 1px solid var(--line2);
+  border-radius: 4px;
+  background: var(--surf);
+  color: var(--ink2);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.type-chip:hover {
+  background: var(--ink-a06);
+}
+.type-chip[data-active] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--on-ink);
+}
+.composer__hours {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.composer__hours .rail-date {
+  width: auto;
+  height: 30px;
+}
+.composer__hours-input {
+  width: 58px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf);
+  font-size: 12px;
+  text-align: center;
+  color: var(--ink);
+}
+/*
+ * The placeholder is four lines, so four must fit. rows alone rounds against the
+ * line box; pinning min-height to 4 line-heights plus the padding and border makes
+ * the fourth line whole rather than clipped mid-glyph.
+ */
+.composer__note {
+  /* 4 lines + padding + border, plus 1px so sub-pixel rounding cannot shave the
+     fourth line at other zoom levels. */
+  min-height: calc(4 * 1.55em + 19px);
+}
+
+/*
+ * Artefact / value completion, anchored under the note. It overlays the attribution
+ * row rather than pushing it down: the composer must not resize as you type.
+ */
+.composer__note-wrap {
+  position: relative;
+}
+.suggest {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 2px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 3px;
+  list-style: none;
+  border: 1px solid var(--line2);
+  border-radius: 4px;
+  background: var(--surf);
+  box-shadow: 0 6px 18px var(--shadow);
+}
+.suggest__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+.suggest__item[data-active] {
+  background: var(--ink-a06);
+}
+.suggest__kind {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.composer__attrib {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  border-top: 1px solid var(--surf3);
+}
+/* the submit sits on this row rather than a line of its own */
+.composer__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.composer__none {
+  font-size: 11px;
+  color: var(--ink3);
+}
+.outcome-chip {
+  height: 24px;
+  padding: 0 9px;
+  border: 1px solid var(--line2);
+  border-radius: 2px;
+  background: var(--surf);
+  color: var(--ink2);
+  font-size: 11px;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.outcome-chip[data-active] {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+  color: var(--accent);
+}
+.composer__foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+/* nothing parsed yet: no empty strip */
+.composer__foot:empty {
+  display: none;
+}
+.composer__submit {
+  padding: 0 18px;
+}
+.primary-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.entries {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf);
+  overflow: hidden;
+}
+.entries__empty {
+  margin: 0;
+  padding: 14px 12px;
+  font-size: 12px;
+  color: var(--ink3);
+}
+.entry {
+  display: grid;
+  grid-template-columns: 80px 128px 46px minmax(0, 1fr) 40px;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  align-items: start;
+}
+.entry:last-child {
+  border-bottom: 0;
+}
+.entry__date {
+  font-size: 12px;
+  line-height: 19px;
+  color: var(--ink3);
+}
+.entry__type {
+  height: 19px;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink2);
+}
+.entry__hours {
+  font-size: 12px;
+  line-height: 19px;
+  color: var(--ink3);
+  text-align: right;
+}
+.entry__body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.entry__note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 19px;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.entry__tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+}
+.entry__person {
+  font-size: 11px;
+  color: var(--ink2);
+}
+/* row actions stay quiet until the row is hovered or one takes focus */
+.entry__actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0.25;
+  transition: opacity var(--t-fast);
+}
+.entry:hover .entry__actions,
+.entry__actions:focus-within {
+  opacity: 1;
+}
+.entry__action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 19px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--ink3);
+  font-size: 13px;
+  line-height: 1;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.entry__action:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+.entry__action--remove:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.entry[data-editing] {
+  background: var(--accent-wash);
+}
+
+.token {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+.token__kind {
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.token--artefact {
+  border: 1px solid var(--ink);
+  color: var(--ink);
+}
+.token--value {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.token--person {
+  color: var(--ink2);
+}
+.token--outcome {
+  background: var(--accent-wash);
+  color: var(--accent);
+}
+
+.thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.thumbs__item {
+  position: relative;
+  width: 64px;
+  height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--surf3);
+}
+.thumbs__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.thumbs__item button {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 3px;
+  background: var(--scrim);
+  color: #fff;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.markdown {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surf2);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.markdown p,
+.markdown ul,
+.markdown ol,
+.markdown h3,
+.markdown h4,
+.markdown h5 {
+  margin: 0 0 8px;
+  font-size: inherit;
+  color: inherit;
+}
+.markdown h3,
+.markdown h4,
+.markdown h5 {
+  font-weight: 700;
+}
+.markdown ul,
+.markdown ol {
+  padding-left: 20px;
+}
+.markdown code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  background: var(--ink-a06);
+}
+.markdown a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.markdown img {
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.markdown__empty {
+  color: var(--ink4);
+}
+
+/*
+ * Hold-to-confirm pair. The fill sweeps over 2000ms and snaps back over 140ms when
+ * released early; Delete fills solid rather than tinting, so the irreversible option
+ * never looks like the safe one mid-hold.
+ */
+.hold-actions {
+  display: flex;
+  border: 1px solid var(--line2);
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.hold-actions__button {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 10px;
+  border: 0;
+  border-right: 1px solid var(--line2);
+  background: var(--surf);
+  color: var(--ink2);
+  font-size: 12px;
+  white-space: nowrap;
+  transition: color var(--t-fast), background var(--t-fast);
+}
+.hold-actions__button:last-child {
+  border-right: 0;
+}
+.hold-actions__button:hover {
+  background: var(--ink-a06);
+  color: var(--ink);
+}
+.hold-actions__button[data-tone='danger']:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.hold-actions__button[data-holding],
+.hold-actions__button[data-arming] {
+  color: var(--danger);
+}
+.hold-actions__button[data-tone='danger'][data-holding] {
+  color: var(--on-color);
+}
+
+.hold-actions__fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: var(--danger-soft);
+  transition: width 140ms linear;
+}
+.hold-actions__button[data-tone='danger'] .hold-actions__fill {
+  background: var(--danger-solid);
+}
+.hold-actions__button[data-holding] .hold-actions__fill {
+  width: 100%;
+  transition: width 2000ms linear;
+}
+
+.hold-actions__icon,
+.hold-actions__label {
+  position: relative;
+  display: inline-flex;
+}
+
+@media (max-width: 900px) {
+  .modal__main,
+  .modal__links {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .modal__write,
+  .link-col {
+    border-right: 0;
+  }
+}
+
+/* ---------------------------------------------------------- label picker */
+
+.labels {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.labels__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.labels__chips:empty {
+  display: none;
+}
+.labels__chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 5px 0 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid oklch(var(--chip-l-border) var(--chip-c-border) var(--chip-h));
+  background: oklch(var(--chip-l-bg) var(--chip-c-bg) var(--chip-h));
+  color: oklch(var(--chip-l-text) var(--chip-c-text) var(--chip-h));
+}
+.labels__chip button {
+  border: 0;
+  background: transparent;
+  padding: 0 2px;
+  font-size: 12px;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.6;
+}
+.labels__chip button:hover {
+  opacity: 1;
+}
+
+.labels__field {
+  position: relative;
+}
+.labels__input {
+  width: 100%;
+  height: 24px;
+  padding: 0 10px;
+  border: 1px dashed var(--ink4);
+  border-radius: 999px;
+  background: var(--surf);
+  font-size: 11px;
+  color: var(--ink);
+}
+
+/* suggestions float so the rail does not jump as you type */
+.labels__menu {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  right: 0;
+  z-index: 5;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 190px;
+  overflow-y: auto;
+  border: 1px solid var(--line2);
+  border-radius: 4px;
+  background: var(--surf);
+  box-shadow: 0 1px 2px var(--shadow);
+}
+.labels__menu button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 8px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-size: 11px;
+  color: var(--ink);
+}
+.labels__menu button[data-active],
+.labels__menu button:hover {
+  background: var(--ink-a06);
+}
+.labels__swatch {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid oklch(var(--chip-l-border) var(--chip-c-border) var(--chip-h));
+  background: oklch(var(--chip-l-bg) var(--chip-c-bg) var(--chip-h));
+}
+.labels__create {
+  color: var(--ink2);
+  font-style: italic;
+}
+
+/* Obstacles reserves four whole lines, like the activity note; +1px so sub-pixel
+   rounding cannot shave the fourth. */
+.block__input--obstacles {
+  min-height: calc(4 * 1.55em + 19px);
+}
+
+/* label colour picker, twelve hues plus "Auto" (derive from the name) */
+.label-edit {
+  position: relative;
+}
+.label-edit__swatch {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid oklch(var(--chip-l-text) var(--chip-c-text) var(--chip-h));
+  background: oklch(var(--chip-l-active) var(--chip-c-active) var(--chip-h));
+}
+.palette {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(4, 18px);
+  gap: 5px;
+  padding: 8px;
+  border: 1px solid var(--line2);
+  border-radius: 4px;
+  background: var(--surf);
+  box-shadow: 0 1px 2px var(--shadow);
+}
+.palette__swatch {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border-radius: 2px;
+  border: 1px solid oklch(var(--chip-l-border) var(--chip-c-border) var(--chip-h));
+  background: oklch(var(--chip-l-active) var(--chip-c-active) var(--chip-h));
+}
+.palette__swatch[data-current] {
+  box-shadow: 0 0 0 2px var(--ink);
+}
+.palette__auto {
+  grid-column: 1 / -1;
+  height: 20px;
+  border: 1px solid var(--line2);
+  border-radius: 2px;
+  background: var(--surf2);
+  color: var(--ink2);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.palette__auto[data-current] {
+  border-color: var(--ink);
+  color: var(--ink);
+}

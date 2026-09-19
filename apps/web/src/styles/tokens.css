@@ -1,0 +1,136 @@
+/*
+ * Design tokens, lifted verbatim from the handoff.
+ *
+ * Nothing in the app may hard-code a colour: lane tints and label chips are
+ * *derived* from these with color-mix() and oklch(), which is what makes both
+ * themes work from one set of rules.
+ */
+
+:root {
+  color-scheme: light;
+
+  --bg: #d9e0e9;
+  --surf: #ffffff;
+  --surf2: #fafaf9;
+  --surf3: #f1f5f9;
+  --head: #e3e9ef;
+  --panel: #eef1f6;
+  --line: #e2e8f0;
+  --line2: #c3ccd7;
+
+  --ink: #1f2937;
+  --ink2: #475569;
+  --ink3: #64748b;
+  --ink4: #94a3b8;
+  --on-ink: #ffffff;
+  --on-color: #ffffff;
+  --ink-hover: #0f1620;
+
+  --accent: #0f766e;
+  --accent-solid: #0f766e;
+  --accent-soft: #ccfbf1;
+  --accent-wash: #e4f0ed;
+
+  --danger: #9f1239;
+  --danger-solid: #9f1239;
+  --danger-solid-hover: #7d0e2d;
+  --danger-soft: #fdf1f2;
+
+  --warn: #b45309;
+  --warn-soft: #fdf4e7;
+  --good: #15803d;
+
+  --ink-a06: rgba(31, 41, 55, 0.06);
+  --ink-a10: rgba(31, 41, 55, 0.1);
+  --scrim: rgba(31, 41, 55, 0.24);
+  --shadow: rgba(15, 23, 42, 0.04);
+
+  --tint-a: 22%;
+  --wash-a: 8%;
+
+  --lane1: #0f766e;
+  --lane2: #2d5a9e;
+  --lane3: #64748b;
+  --lane4: #14607a;
+  --lane5: #5b4b9e;
+  --lane6: #6b5647;
+  --lane7: #7d4471;
+
+  /* label chip lightness/chroma pairs, applied to a hashed hue */
+  --chip-l-border: 0.86;
+  --chip-c-border: 0.06;
+  --chip-l-bg: 0.965;
+  --chip-c-bg: 0.025;
+  --chip-l-text: 0.45;
+  --chip-c-text: 0.12;
+  --chip-l-active: 0.55;
+  --chip-c-active: 0.13;
+  --chip-text-active: #fff;
+
+  --font-ui: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-fast: 150ms ease-out;
+  --t-panel: 180ms ease-out;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0c1016;
+  --surf: #1d242f;
+  --surf2: #1e2530;
+  --surf3: #232b37;
+  --head: #1f2731;
+  --panel: #11161e;
+  --line: #2b3441;
+  --line2: #3a4552;
+
+  --ink: #e6ebf1;
+  --ink2: #b4c0cd;
+  --ink3: #8a97a5;
+  --ink4: #6b7885;
+  --on-ink: #10151b;
+  --on-color: #ffffff;
+  --ink-hover: #ffffff;
+
+  --accent: #4fb3a4;
+  --accent-solid: #14655d;
+  --accent-soft: #123c37;
+  --accent-wash: #14322f;
+
+  --danger: #f08099;
+  --danger-solid: #a32742;
+  --danger-solid-hover: #8d1f36;
+  --danger-soft: #38191f;
+
+  --warn: #d79a45;
+  --warn-soft: #362810;
+  --good: #55ab6f;
+
+  --ink-a06: rgba(255, 255, 255, 0.05);
+  --ink-a10: rgba(255, 255, 255, 0.09);
+  --scrim: rgba(0, 0, 0, 0.55);
+  --shadow: rgba(0, 0, 0, 0.4);
+
+  --tint-a: 26%;
+  --wash-a: 12%;
+
+  --lane1: #3f9e93;
+  --lane2: #6592cf;
+  --lane3: #8996a6;
+  --lane4: #4a9cb5;
+  --lane5: #8f83d1;
+  --lane6: #a8907c;
+  --lane7: #b57ea8;
+
+  --chip-l-border: 0.4;
+  --chip-c-border: 0.06;
+  --chip-l-bg: 0.27;
+  --chip-c-bg: 0.04;
+  --chip-l-text: 0.82;
+  --chip-c-text: 0.09;
+  --chip-l-active: 0.62;
+  --chip-c-active: 0.13;
+  --chip-text-active: oklch(0.18 0.03 var(--chip-h));
+}
