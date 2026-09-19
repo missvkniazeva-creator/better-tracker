@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="./colors_and_type.css">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#d9e0e9; --surf:#ffffff; --surf2:#fafaf9; --surf3:#f1f5f9; --head:#e3e9ef;
+  --line:#e2e8f0; --line2:#c3ccd7; --panel:#eef1f6;
+  --ink:#1f2937; --ink2:#475569; --ink3:#64748b; --ink4:#94a3b8;
+  --on-ink:#ffffff; --on-color:#ffffff; --ink-hover:#0f1620;
+  --accent:#0f766e; --accent-solid:#0f766e; --accent-soft:#ccfbf1; --accent-wash:#e4f0ed;
+  --danger:#9f1239; --danger-solid:#9f1239; --danger-solid-hover:#7d0e2d; --danger-soft:#fdf1f2;
+  --warn:#b45309; --warn-soft:#fdf4e7; --good:#15803d;
+  --ink-a06:rgba(31,41,55,0.06); --ink-a10:rgba(31,41,55,0.10); --scrim:rgba(31,41,55,0.24);
+  --shadow:rgba(15,23,42,0.04);
+  --tint-a:22%; --wash-a:8%;
+  --lane1:#0f766e; --lane2:#2d5a9e; --lane3:#64748b; --lane4:#14607a; --lane5:#5b4b9e; --lane6:#6b5647; --lane7:#7d4471;
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0c1016; --surf:#1d242f; --surf2:#1e2530; --surf3:#232b37; --head:#1f2731;
+  --line:#2b3441; --line2:#3a4552; --panel:#11161e;
+  --ink:#e6ebf1; --ink2:#b4c0cd; --ink3:#8a97a5; --ink4:#6b7885;
+  --on-ink:#10151b; --on-color:#ffffff; --ink-hover:#ffffff;
+  --accent:#4fb3a4; --accent-solid:#14655d; --accent-soft:#123c37; --accent-wash:#14322f;
+  --danger:#f08099; --danger-solid:#a32742; --danger-solid-hover:#8d1f36; --danger-soft:#38191f;
+  --warn:#d79a45; --warn-soft:#362810; --good:#55ab6f;
+  --ink-a06:rgba(255,255,255,0.05); --ink-a10:rgba(255,255,255,0.09); --scrim:rgba(0,0,0,0.55);
+  --shadow:rgba(0,0,0,0.4);
+  --tint-a:26%; --wash-a:12%;
+  --lane1:#3f9e93; --lane2:#6592cf; --lane3:#8996a6; --lane4:#4a9cb5; --lane5:#8f83d1; --lane6:#a8907c; --lane7:#b57ea8;
+}
+html,body{margin:0;background:var(--bg);font-family:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+a{color:var(--ink);text-decoration:none}a:hover{color:var(--accent);text-decoration:underline}
+input,select,textarea,button{font-family:inherit}
+input:focus,textarea:focus{outline:1px solid var(--ink);outline-offset:0}
+*{box-sizing:border-box}
+</style>
+</helmet>
+<div style="height:100vh;max-height:100vh;overflow:hidden;display:flex;flex-direction:column;background:var(--bg);font-size:13px;line-height:1.4;color:var(--ink)">
+
+  <!-- Header -->
+  <div style="display:flex;align-items:center;gap:16px;padding:10px 20px;border-bottom:1px solid var(--line2);background:var(--surf)">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:16px;font-weight:700;letter-spacing:-0.01em">Better Tracker</span>
+      <span style="font-size:12px;color:var(--ink3);font-family:'IBM Plex Mono',monospace">Wk 36 · Sep 1–5, 2026</span>
+    </div>
+    <div style="flex:1;display:flex;align-items:center;gap:8px;justify-content:center">
+      <div style="display:flex;align-items:center;gap:7px;width:340px;height:30px;padding:0 10px;border:1px solid var(--line);border-radius:4px;background:var(--surf)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ink2)"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <input value="{{ search }}" onChange="{{ onSearch }}" placeholder="Search tasks, obstacles, activity…" style="flex:1;min-width:0;height:100%;border:0;background:transparent;font-size:13px;color:var(--ink)">
+      </div>
+      <button onClick="{{ toggleFilters }}" style="height:30px;padding:0 12px;background:var(--surf);border:1px solid var(--line);border-radius:4px;font-size:13px;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:7px;transition:background 150ms ease-out" style-hover="background:var(--surf2)">Filters <span style="font-family:'IBM Plex Mono',monospace;color:var(--ink3)">{{ activeFilterCount }}</span></button>
+      <sc-if value="{{ hasFilters }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ clearFilters }}" style="height:30px;padding:0 8px;background:transparent;border:0;font-size:13px;color:var(--ink2);cursor:pointer" style-hover="text-decoration:underline">Clear</button>
+      </sc-if>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;font-size:12px;color:var(--ink3)">
+      <span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ visibleCount }}</span> / <span style="font-family:'IBM Plex Mono',monospace">{{ totalCount }}</span> tasks</span>
+      <span><span style="font-family:'IBM Plex Mono',monospace;color:var(--accent)">{{ contribCount }}</span> contributions to outcomes</span>
+    </div>
+    <button onClick="{{ toggleTheme }}" title="{{ themeTitle }}" style="width:30px;height:30px;flex-shrink:0;background:var(--surf);border:1px solid var(--line);border-radius:4px;color:var(--ink2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 150ms ease-out" style-hover="background:var(--surf2)">
+      <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path></svg></sc-if>
+      <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path></svg></sc-if>
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <sc-if value="{{ filtersOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;align-items:center;gap:24px;padding:8px 20px;border-bottom:1px solid var(--line);background:var(--surf);flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <span style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3);margin-right:4px">Labels</span>
+        <sc-for list="{{ labelChips }}" as="c" hint-placeholder-count="4">
+          <sc-if value="{{ c.editing }}" hint-placeholder-val="{{ false }}">
+            <span style="display:flex;align-items:center;gap:2px;height:22px;border:1px solid {{ c.border }};border-radius:2px;background:{{ c.bg }};padding:0 2px 0 6px">
+              <input value="{{ c.name }}" onChange="{{ c.onRename }}" style="width:74px;height:18px;border:0;background:transparent;font-size:10px;letter-spacing:0.05em;text-transform:uppercase;color:{{ c.color }};padding:0">
+              <button onClick="{{ c.onRemove }}" title="Delete label" style="width:16px;height:18px;border:0;background:transparent;color:{{ c.color }};font-size:12px;line-height:1;cursor:pointer">×</button>
+            </span>
+          </sc-if>
+          <sc-if value="{{ c.notEditing }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ c.onToggle }}" style="height:22px;padding:0 8px;border-radius:2px;font-size:10px;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};transition:background 150ms ease-out">{{ c.name }}</button>
+          </sc-if>
+        </sc-for>
+        <sc-if value="{{ labelEdit }}" hint-placeholder-val="{{ false }}">
+          <input value="{{ labelDraft }}" onChange="{{ onLabelDraft }}" onKeyDown="{{ onLabelDraftKey }}" placeholder="New label ↵" style="width:110px;height:22px;border:1px dashed var(--ink4);border-radius:2px;background:var(--surf);font-size:10px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink);padding:0 6px">
+        </sc-if>
+        <button onClick="{{ toggleLabelEdit }}" style="height:22px;padding:0 8px;border:1px solid var(--line);border-radius:2px;background:var(--surf2);font-size:10px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink2);cursor:pointer;transition:background 150ms ease-out" style-hover="background:var(--surf)">{{ labelEditText }}</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3);margin-right:4px">Priority</span>
+        <sc-for list="{{ prioChips }}" as="c" hint-placeholder-count="3">
+          <button onClick="{{ c.onToggle }}" title="{{ c.title }}" style="height:22px;padding:0 8px;border-radius:4px;font-size:11px;font-weight:600;font-family:'IBM Plex Mono',monospace;cursor:pointer;display:flex;align-items:center;gap:4px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};transition:background 150ms ease-out">
+            <sc-if value="{{ c.isP1 }}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 11-5-5-5 5"></path><path d="m17 18-5-5-5 5"></path></svg></sc-if>
+            <sc-if value="{{ c.isP2 }}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 5-5-5-5"></path><path d="m4 17 5-5-5-5"></path></svg></sc-if>
+            <sc-if value="{{ c.isP3 }}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 6 5 5 5-5"></path><path d="m7 13 5 5 5-5"></path></svg></sc-if>{{ c.name }}
+          </button>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3);margin-right:4px">Flags</span>
+        <button onClick="{{ toggleObstacleFilter }}" title="Has an obstacle" style="width:26px;height:22px;border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;border:1px solid {{ obstacleChip.border }};background:{{ obstacleChip.bg }};color:{{ obstacleChip.color }}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.6 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+        </button>
+        <button onClick="{{ toggleSevFilter }}" style="height:22px;padding:0 8px;border-radius:2px;font-size:10px;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;border:1px solid {{ sevChip.border }};background:{{ sevChip.bg }};color:{{ sevChip.color }}">▲ Severity high</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <span style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3);margin-right:4px">Objectives</span>
+        <sc-for list="{{ objChips }}" as="c" hint-placeholder-count="3">
+          <button onClick="{{ c.onToggle }}" title="{{ c.title }}" style="height:22px;padding:0 8px;border-radius:2px;font-size:10px;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};transition:background 150ms ease-out">{{ c.name }}</button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- Workspace -->
+  <div style="flex:1;display:flex;min-height:0;align-items:stretch">
+
+    <!-- Activity bar -->
+    <div style="width:48px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;background:var(--surf);border-right:1px solid var(--line2)">
+      <button onClick="{{ toolObj.onPick }}" title="Objectives" style="width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:0;border-radius:4px;cursor:pointer;background:{{ toolObj.bg }};color:{{ toolObj.color }};box-shadow:{{ toolObj.mark }};transition:background 150ms ease-out,color 150ms ease-out" style-hover="background:var(--ink-a06)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle></svg></button>
+      <button onClick="{{ toolOut.onPick }}" title="Outcomes" style="width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:0;border-radius:4px;cursor:pointer;background:{{ toolOut.bg }};color:{{ toolOut.color }};box-shadow:{{ toolOut.mark }};transition:background 150ms ease-out,color 150ms ease-out" style-hover="background:var(--ink-a06)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4.5"></path><path d="M4 5h11l-1.6 3.5L15 12H4Z"></path></svg></button>
+      <button onClick="{{ toolLog.onPick }}" title="Log" style="width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:0;border-radius:4px;cursor:pointer;background:{{ toolLog.bg }};color:{{ toolLog.color }};box-shadow:{{ toolLog.mark }};transition:background 150ms ease-out,color 150ms ease-out" style-hover="background:var(--ink-a06)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 1.8"></path></svg></button>
+    </div>
+
+    <!-- Side panel -->
+    <sc-if value="{{ panelOpen }}" hint-placeholder-val="{{ true }}">
+      <div style="width:{{ panelW }}px;max-width:calc(100vw - 48px);flex-shrink:1;min-width:0;display:flex;background:var(--surf);border-right:1px solid var(--line2);overflow:hidden;transition:width 180ms ease-out">
+  <sc-if value="{{ showObjectives }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex:1;min-width:0;min-height:0">
+      <div style="flex:1 1 520px;max-width:100%;min-width:0;min-height:0;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:14px 24px;border-bottom:1px solid var(--line)">
+        <div><span style="display:block;width:32px;height:4px;background:var(--accent);margin-bottom:8px"></span><div style="font-size:16px;font-weight:700">Objectives</div></div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <button onClick="{{ onAddObjective }}" title="New objective" style="width:26px;height:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:4px;background:var(--surf);color:var(--ink2);cursor:pointer;transition:background 150ms ease-out,color 150ms ease-out" style-hover="background:var(--surf3);color:var(--ink)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+        <button onClick="{{ collapsePanel }}" title="Collapse panel" style="width:26px;height:26px;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:14px;color:var(--ink2);cursor:pointer;transition:background 150ms ease-out" style-hover="background:var(--surf2)">×</button>
+        </div>
+      </div>
+      <div style="overflow:auto;flex:1">
+        <sc-for list="{{ objYears }}" as="yr" hint-placeholder-count="1">
+        <div style="display:flex;flex-direction:column">
+          <button onClick="{{ yr.onToggle }}" style="display:flex;align-items:center;gap:8px;padding:8px 24px;border:0;border-bottom:1px solid var(--line);background:var(--surf2);cursor:pointer;text-align:left;transition:background 150ms ease-out" style-hover="background:var(--surf3)">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink3);width:10px">{{ yr.chevron }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;letter-spacing:0.02em;color:var(--ink)">{{ yr.year }}</span>
+            <span style="margin-left:auto;font-size:11px;color:var(--ink3)">{{ yr.summary }}</span>
+          </button>
+          <sc-if value="{{ yr.open }}" hint-placeholder-val="{{ true }}">
+        <sc-for list="{{ yr.rows }}" as="o" hint-placeholder-count="6">
+          <div onClick="{{ o.onEdit }}" title="Click to edit" style="display:flex;flex-direction:column;gap:6px;padding:12px 24px 12px {{ o.indent }}px;border-bottom:1px solid var(--line);border-left:3px solid {{ o.mark }};cursor:pointer;background:{{ o.bg }};transition:background 150ms ease-out" style-hover="background:var(--surf2)">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+              <span style="flex:1;min-width:0;font-size:{{ o.size }}px;font-weight:{{ o.weight }};color:var(--ink)">{{ o.name }}</span>
+              <span style="font-size:10px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3);white-space:nowrap">{{ o.horizon }}</span>
+            </div>
+            <div style="font-size:12px;color:var(--ink2);text-wrap:pretty">{{ o.measure }}</div>
+            <div style="display:flex;gap:2px;align-items:flex-end">
+              <sc-for list="{{ o.heat }}" as="h" hint-placeholder-count="26">
+                <span title="{{ h.title }}" style="flex:1;min-width:0;height:{{ h.h }}px;border-radius:1px;background:{{ h.bg }}"></span>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11px;color:var(--ink3)">
+              <span style="white-space:nowrap"><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ o.total }}</span> cards · <span style="font-family:'IBM Plex Mono',monospace">{{ o.archivedCount }}</span> archived</span>
+              <span style="white-space:nowrap"><span style="font-family:'IBM Plex Mono',monospace;color:var(--accent)">{{ o.contribs }}</span> contributions</span>
+            </div>
+            <sc-if value="{{ o.hasOutcomes }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:3px;padding-top:2px">
+                <sc-for list="{{ o.outcomes }}" as="c" hint-placeholder-count="1"><span style="font-size:11px;color:var(--accent)">→ {{ c.name }}</span></sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+          </sc-if>
+        </div>
+        </sc-for>
+      </div>
+      </div>
+      <sc-if value="{{ objEditOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1 1 380px;min-width:280px;min-height:0;display:flex;flex-direction:column;border-left:1px solid var(--line);background:var(--surf2)">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line)">
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--ink)">Edit objective</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+            <button onPointerDown="{{ objEdit.onHoldStart }}" onPointerUp="{{ objEdit.onHoldEnd }}" onPointerLeave="{{ objEdit.onHoldEnd }}" title="Hold 2s to archive" style="position:relative;overflow:hidden;height:26px;padding:0 10px;flex-shrink:0;background:var(--surf);border:1px solid {{ objEdit.holdBorder }};border-radius:4px;font-size:12px;color:{{ objEdit.holdColor }};cursor:pointer;display:flex;align-items:center;gap:6px;transition:color 150ms ease-out,border-color 150ms ease-out">
+              <span style="position:absolute;left:0;top:0;bottom:0;width:{{ objEdit.holdW }}%;background:var(--danger-soft);transition:width {{ objEdit.holdMs }}ms linear"></span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="position:relative"><rect x="3" y="4" width="18" height="4" rx="1"></rect><path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8"></path><path d="M10 12h4"></path></svg>
+              <span style="position:relative">Archive</span>
+            </button>
+            <button onClick="{{ objEdit.onClose }}" title="Close editor" style="width:26px;height:26px;flex-shrink:0;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:14px;color:var(--ink2);cursor:pointer;transition:background 150ms ease-out" style-hover="background:var(--surf3)">×</button>
+            </div>
+          </div>
+          <div style="flex:1;overflow:auto;display:flex;flex-direction:column;gap:14px;padding:16px 20px">
+            <label style="display:flex;flex-direction:column;gap:5px">
+              <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Name</span>
+              <input value="{{ objEdit.name }}" onChange="{{ objEdit.onName }}" onBlur="{{ objEdit.onNameCommit }}" placeholder="Objective name" style="height:30px;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:13px;font-weight:600;color:var(--ink);padding:0 8px">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:5px">
+              <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Parent objective</span>
+              <select value="{{ objEdit.parent }}" onChange="{{ objEdit.onParent }}" style="height:30px;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:13px;color:var(--ink);padding:0 6px">
+                <sc-for list="{{ objEdit.parentOptions }}" as="p" hint-placeholder-count="4"><option value="{{ p.value }}">{{ p.label }}</option></sc-for>
+              </select>
+            </label>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Horizon</span>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;height:30px;padding:0 10px;border:1px dashed var(--line2);border-radius:4px">
+                <span style="font-size:13px;color:var(--ink)">{{ objEdit.horizonLabel }}</span>
+              </div>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:5px">
+              <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Measure</span>
+              <textarea value="{{ objEdit.measure }}" onChange="{{ objEdit.onMeasure }}" rows="6" placeholder="How will you know this is met?" style="border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:12px;line-height:1.5;color:var(--ink);padding:8px;resize:vertical;min-height:96px"></textarea>
+            </label>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Outcomes</span>
+                <button onClick="{{ objEdit.onNewOutcome }}" title="New outcome for this objective" style="margin-left:auto;height:22px;padding:0 8px;display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:11px;color:var(--ink2);cursor:pointer;transition:background 150ms ease-out,color 150ms ease-out" style-hover="background:var(--surf3);color:var(--ink)"><span style="font-size:13px;line-height:1">+</span>New</button>
+              </div>
+              <div style="display:flex;flex-direction:column;border:1px solid var(--line);border-radius:4px;background:var(--surf);overflow:hidden">
+                <sc-for list="{{ objEdit.outcomeRows }}" as="r" hint-placeholder-count="4">
+                  <button onClick="{{ r.onToggle }}" style="display:flex;align-items:center;gap:8px;padding:7px 10px;border:0;border-bottom:1px solid var(--line);background:{{ r.bg }};cursor:pointer;text-align:left;transition:background 150ms ease-out" style-hover="background:var(--surf3)">
+                    <span style="width:14px;height:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid {{ r.boxBorder }};border-radius:2px;background:{{ r.boxBg }};color:var(--on-ink);font-size:9px;line-height:1">{{ r.check }}</span>
+                    <span style="flex:1;min-width:0;font-size:12px;color:var(--ink)">{{ r.name }}</span>
+                    <span style="font-size:9px;letter-spacing:0.05em;text-transform:uppercase;color:{{ r.noteColor }};white-space:nowrap">{{ r.note }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showOutcomes }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex:1;min-width:0;min-height:0">
+      <div style="flex:1 1 460px;max-width:100%;min-width:0;min-height:0;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:14px 24px;border-bottom:1px solid var(--line)">
+        <div><span style="display:block;width:32px;height:4px;background:var(--accent);margin-bottom:8px"></span><div style="font-size:16px;font-weight:700">Outcomes</div></div>
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <button onClick="{{ onAddOutcome }}" title="New outcome" style="width:26px;height:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:4px;background:var(--surf);color:var(--ink2);cursor:pointer;transition:background 150ms ease-out,color 150ms ease-out" style-hover="background:var(--surf3);color:var(--ink)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+    <button onClick="{{ collapsePanel }}" title="Collapse panel" style="width:26px;height:26px;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:14px;color:var(--ink2);cursor:pointer;transition:background 150ms ease-out" style-hover="background:var(--surf2)">×</button>
+    </div>
+      </div>
+      <div style="overflow:auto;flex:1">
+        <sc-for list="{{ outcomes }}" as="o" hint-placeholder-count="4">
+          <div onClick="{{ o.onEdit }}" title="Click to edit" style="display:flex;flex-direction:column;gap:6px;padding:12px 24px;border-bottom:1px solid var(--line);cursor:pointer;background:{{ o.bg }};transition:background 150ms ease-out" style-hover="background:var(--surf2)">
+            <div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
+              <span style="flex:1;min-width:0;font-size:13px;font-weight:600;color:var(--ink)">{{ o.name }}</span>
+            </div>
+            <div style="font-size:12px;color:var(--ink2);text-wrap:pretty">{{ o.desc }}</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;height:6px;background:var(--line)"><div style="height:6px;background:{{ o.color }};width:{{ o.contribPct }}%"></div></div>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink2);white-space:nowrap">{{ o.taskCountLabel }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--ink3)">
+              <span>{{ o.objName }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace">{{ o.date }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      </div>
+      <sc-if value="{{ outEditOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1 1 380px;min-width:280px;min-height:0;display:flex;flex-direction:column;border-left:1px solid var(--line);background:var(--surf2)">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line)">
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--ink)">Edit outcome</div>
+            </div>
+            <button onClick="{{ outEdit.onClose }}" title="Close editor" style="width:26px;height:26px;flex-shrink:0;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:14px;color:var(--ink2);cursor:pointer;transition:background 150ms ease-out" style-hover="background:var(--surf3)">×</button>
+          </div>
+          <div style="flex:1;overflow:auto;display:flex;flex-direction:column;gap:14px;padding:16px 20px">
+            <label style="display:flex;flex-direction:column;gap:5px">
+              <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Name</span>
+              <input value="{{ outEdit.name }}" onFocus="{{ selectAll }}" onChange="{{ outEdit.onName }}" onBlur="{{ outEdit.onNameCommit }}" placeholder="Outcome name" style="height:30px;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:13px;font-weight:600;color:var(--ink);padding:0 8px">
+            </label>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Objective</span>
+              <div style="display:flex;flex-direction:column;border:1px solid var(--line);border-radius:4px;background:var(--surf);overflow:hidden;max-height:220px;overflow-y:auto">
+                <sc-for list="{{ outEdit.objectiveRows }}" as="r" hint-placeholder-count="4">
+                  <button onClick="{{ r.onPick }}" style="display:flex;align-items:center;gap:8px;padding:7px 10px 7px {{ r.indent }}px;border:0;border-bottom:1px solid var(--line);background:{{ r.bg }};cursor:pointer;text-align:left;transition:background 150ms ease-out" style-hover="background:var(--surf3)">
+                    <span style="width:13px;height:13px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid {{ r.dotBorder }};border-radius:50%;background:var(--surf)"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.dot }}"></span></span>
+                    <span style="flex:1;min-width:0;font-size:12px;font-weight:{{ r.weight }};color:var(--ink)">{{ r.name }}</span>
+                    <span style="font-size:9px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3);white-space:nowrap">{{ r.horizon }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:5px">
+              <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Date</span>
+              <input type="date" value="{{ outEdit.date }}" onChange="{{ outEdit.onDate }}" style="height:30px;font-family:'IBM Plex Mono',monospace;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:13px;color:var(--ink);padding:0 8px">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:5px">
+              <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Description</span>
+              <textarea value="{{ outEdit.desc }}" onChange="{{ outEdit.onDesc }}" rows="6" placeholder="What was produced, and for whom?" style="border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:12px;line-height:1.5;color:var(--ink);padding:8px;resize:vertical;min-height:96px"></textarea>
+            </label>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+      <sc-if value="{{ showLog }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;flex:1;min-width:0;min-height:0">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line)">
+            <div><span style="display:block;width:32px;height:4px;background:var(--accent);margin-bottom:8px"></span><div style="font-size:16px;font-weight:700">Log</div></div>
+            <button onClick="{{ collapsePanel }}" title="Collapse panel" style="width:26px;height:26px;flex-shrink:0;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:14px;color:var(--ink2);cursor:pointer;transition:background 150ms ease-out" style-hover="background:var(--surf2)">×</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:10px 20px;border-bottom:1px solid var(--line)">
+            <div style="display:flex;gap:2px;padding:2px;border:1px solid var(--line);border-radius:4px;background:var(--surf3)">
+              <sc-for list="{{ logPanel.scopes }}" as="sc" hint-placeholder-count="4">
+                <button onClick="{{ sc.onPick }}" style="height:24px;padding:0 11px;border:0;border-radius:3px;font-size:11px;font-weight:600;cursor:pointer;background:{{ sc.bg }};color:{{ sc.color }};transition:background 150ms ease-out">{{ sc.name }}</button>
+              </sc-for>
+            </div>
+            <div style="margin-left:auto;display:flex;align-items:center;gap:4px">
+              <button onClick="{{ logPanel.onToday }}" style="height:24px;padding:0 10px;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:11px;color:var(--ink2);cursor:pointer;transition:background 150ms ease-out" style-hover="background:var(--surf3)">Today</button>
+              <button onClick="{{ logPanel.onPrev }}" title="Previous period" style="width:24px;height:24px;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:13px;color:var(--ink2);cursor:pointer;transition:background 150ms ease-out" style-hover="background:var(--surf3)">‹</button>
+              <button onClick="{{ logPanel.onNext }}" title="Next period" style="width:24px;height:24px;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:13px;color:var(--ink2);cursor:pointer;transition:background 150ms ease-out" style-hover="background:var(--surf3)">›</button>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line)">
+            <span style="font-size:14px;font-weight:700;color:var(--ink)">{{ logPanel.label }}</span>
+            <div style="display:flex;gap:26px">
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:700;line-height:1.1;color:var(--ink)">{{ logPanel.count }}</span>
+                <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Entries</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:700;line-height:1.1;color:var(--ink)">{{ logPanel.hours }}</span>
+                <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Hours</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:700;line-height:1.1;color:var(--accent)">{{ logPanel.contribs }}</span>
+                <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Contributions</span>
+              </div>
+            </div>
+            <div style="display:flex;height:6px;gap:1px;background:var(--line);border-radius:1px;overflow:hidden">
+              <sc-for list="{{ logPanel.types }}" as="ty" hint-placeholder-count="0"><div style="width:{{ ty.w }}%;background:{{ ty.color }}"></div></sc-for>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:14px">
+              <sc-for list="{{ logPanel.types }}" as="ty" hint-placeholder-count="0">
+                <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink3)"><span style="width:10px;height:6px;background:{{ ty.color }}"></span>{{ ty.name }} <span style="font-family:'IBM Plex Mono',monospace;color:var(--ink2)">{{ ty.n }}</span></span>
+              </sc-for>
+            </div>
+          </div>
+          <div style="flex:1;overflow:auto">
+            <sc-for list="{{ logPanel.buckets }}" as="b" hint-placeholder-count="0">
+              <button onClick="{{ b.onDrill }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:10px 20px;border:0;border-bottom:1px solid var(--line);background:transparent;cursor:pointer;text-align:left;transition:background 150ms ease-out" style-hover="background:var(--surf2)">
+                <span style="width:96px;flex-shrink:0;font-size:12px;font-weight:600;color:{{ b.tone }}">{{ b.label }}</span>
+                <span style="flex:1;min-width:0;height:6px;background:var(--line);display:flex"><span style="width:{{ b.w }}%;background:var(--accent)"></span></span>
+                <span style="width:58px;flex-shrink:0;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px;color:{{ b.tone }}">{{ b.countLabel }}</span>
+                <span style="width:46px;flex-shrink:0;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink3)">{{ b.hoursLabel }}</span>
+                <span style="font-size:12px;color:var(--ink4)">›</span>
+              </button>
+            </sc-for>
+            <sc-for list="{{ logPanel.days }}" as="d" hint-placeholder-count="0">
+              <div style="display:flex;flex-direction:column">
+                <div style="display:flex;align-items:baseline;gap:10px;padding:8px 20px;background:var(--surf2);border-bottom:1px solid var(--line)">
+                  <span style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink)">{{ d.label }}</span>
+                  <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink3)">{{ d.summary }}</span>
+                </div>
+                <sc-for list="{{ d.entries }}" as="e" hint-placeholder-count="1">
+                  <button onClick="{{ e.onOpen }}" title="Open task" style="display:flex;flex-direction:column;align-items:stretch;gap:4px;width:100%;padding:9px 20px;border:0;border-bottom:1px solid var(--line);background:transparent;cursor:pointer;text-align:left;transition:background 150ms ease-out" style-hover="background:var(--surf2)">
+                    <span style="display:flex;align-items:center;gap:8px">
+                      <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:{{ e.typeColor }}">{{ e.type }}</span>
+                      <span style="flex:1;min-width:0;font-size:11px;color:var(--ink3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ e.taskTitle }}</span>
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink3)">{{ e.hours }}</span>
+                    </span>
+                    <span style="font-size:12px;line-height:1.5;color:var(--ink);text-wrap:pretty">{{ e.note }}</span>
+                    <sc-if value="{{ e.hasOutcomes }}" hint-placeholder-val="{{ false }}">
+                      <span style="display:flex;flex-wrap:wrap;gap:5px">
+                        <sc-for list="{{ e.outcomes }}" as="o" hint-placeholder-count="1"><span style="font-size:11px;padding:1px 6px;border-radius:2px;background:var(--accent-wash);color:var(--accent)">→ {{ o.name }}</span></sc-for>
+                      </span>
+                    </sc-if>
+                  </button>
+                </sc-for>
+              </div>
+            </sc-for>
+            <sc-if value="{{ logPanel.empty }}" hint-placeholder-val="{{ false }}"><div style="padding:16px 20px;font-size:12px;color:var(--ink3)">No activity in this period.</div></sc-if>
+          </div>
+        </div>
+      </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- Board -->
+    <div style="flex:1;min-width:0;overflow:auto;display:flex;flex-direction:column">
+  <div style="flex:1;display:flex;flex-direction:column;gap:10px;padding:10px 20px 24px">
+
+    <!-- Intake -->
+    <div style="border:1px solid var(--line2);border-top:3px solid var(--lane7);border-radius:4px;background:var(--panel);overflow:hidden">
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;padding:8px 14px;background:var(--head)">
+          <button onClick="{{ intake.onToggle }}" style="display:flex;align-items:center;gap:8px;border:0;background:transparent;cursor:pointer;padding:0;font-size:13px;font-weight:600;color:var(--ink)"><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink3);width:12px">{{ intake.chevron }}</span>Intake<span style="font-family:'IBM Plex Mono',monospace;font-weight:400;color:var(--ink3)">{{ intake.count }}</span></button>
+        </div>
+        <sc-if value="{{ intake.open }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column">
+            <div onDragOver="{{ allowDrop }}" onDrop="{{ intake.onDrop }}" onDoubleClick="{{ intake.onDblAdd }}" style="position:relative;overflow:auto;background:transparent;height:{{ intakeH }}px">
+              <sc-for list="{{ intake.cards }}" as="card" hint-placeholder-count="3">
+                <div draggable="true" onDragStart="{{ card.onDragStart }}" onClick="{{ card.onOpen }}" onDoubleClick="{{ stop }}" style="position:absolute;width:{{ intakeCardW }}px;max-width:calc(100% - 32px);display:flex;box-shadow:{{ card.edge }};background:{{ card.bg }};border:1px solid var(--line);border-radius:4px;cursor:grab;overflow:hidden;transition:border-color 150ms ease-out;left:{{ card.x }}px;top:{{ card.y }}px" style-hover="border-color:var(--ink)">
+                  <div style="flex:1;min-width:0;padding:7px 9px;display:flex;flex-direction:column;gap:5px">
+                    <div style="display:flex;gap:6px;align-items:flex-start;justify-content:space-between">
+                      <span style="font-size:13px;line-height:1.35;color:var(--ink);display:block;min-height:35px">{{ card.title }}</span>
+                      <span style="display:flex;align-items:center;gap:5px;flex-shrink:0">
+                        <sc-if value="{{ card.sevGlyph }}" hint-placeholder-val="{{ false }}"><span title="{{ card.sevTitle }}" style="font-size:11px;line-height:1;color:{{ card.sevColor }}">{{ card.sevGlyph }}</span></sc-if>
+                        <sc-if value="{{ card.hasObstacle }}" hint-placeholder-val="{{ false }}">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--danger)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><title>Obstacle</title><path d="M10.3 3.6 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+                        </sc-if>
+                        <sc-if value="{{ card.showPrio }}" hint-placeholder-val="{{ false }}">
+                          <span title="{{ card.prio }}" style="display:flex;align-items:center;color:{{ card.prioColor }}">
+                            <sc-if value="{{ card.isP1 }}" hint-placeholder-val="{{ false }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 11-5-5-5 5"></path><path d="m17 18-5-5-5 5"></path></svg></sc-if>
+                            <sc-if value="{{ card.isP3 }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 6 5 5 5-5"></path><path d="m7 13 5 5 5-5"></path></svg></sc-if>
+                          </span>
+                        </sc-if>
+                      </span>
+                    </div>
+                    <sc-if value="{{ card.hasTaxonomy }}" hint-placeholder-val="{{ true }}">
+                      <div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center">
+                        <sc-for list="{{ card.labels }}" as="l" hint-placeholder-count="1"><span style="font-size:10px;letter-spacing:0.05em;text-transform:uppercase;padding:0 4px;border:1px solid {{ l.border }};border-radius:2px;background:{{ l.bg }};color:{{ l.color }}">{{ l.name }}</span></sc-for>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ card.hasLinks }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-direction:column;gap:2px;margin:3px -9px -7px;padding:6px 9px;background:var(--ink-a06);border-top:1px solid var(--ink-a10)">
+                        <sc-for list="{{ card.objTags }}" as="t" hint-placeholder-count="1"><span style="font-size:11px;color:var(--ink2)">{{ t.name }}</span></sc-for>
+                        <sc-for list="{{ card.outTags }}" as="t" hint-placeholder-count="1"><span style="font-size:11px;color:var(--accent)">→ {{ t.name }}</span></sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+              <sc-if value="{{ intake.empty }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink3);font-size:12px">Nothing in intake — double-click to add</div></sc-if>
+            </div>
+            <div onMouseDown="{{ intake.onResizeStart }}" title="Drag to resize intake" style="height:10px;flex-shrink:0;cursor:ns-resize;background:var(--surf3);border-top:1px solid var(--line);display:flex;align-items:center;justify-content:center">
+              <span style="width:40px;height:2px;background:var(--ink4);border-radius:1px"></span>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <!-- Lanes -->
+    <sc-for list="{{ lanes }}" as="lane" hint-placeholder-count="3">
+      <div style="border:1px solid var(--line2);border-top:3px solid {{ lane.color }};border-radius:4px;background:var(--panel);overflow:hidden">
+        <div style="flex:1;min-width:0">
+          <div draggable="{{ lane.draggable }}" onDragStart="{{ lane.onLaneDragStart }}" onDragOver="{{ lane.onLaneDragOver }}" onDrop="{{ lane.onLaneDrop }}" onDragEnd="{{ lane.onLaneDragEnd }}" title="Drag to reorder lanes" style="display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;padding:8px 14px;background:{{ lane.tint }};box-shadow:{{ lane.headShadow }};cursor:grab">
+            <span style="display:flex;flex-shrink:0;color:var(--ink4)"><svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor"><circle cx="2" cy="3.5" r="1.2"></circle><circle cx="8" cy="3.5" r="1.2"></circle><circle cx="2" cy="7" r="1.2"></circle><circle cx="8" cy="7" r="1.2"></circle><circle cx="2" cy="10.5" r="1.2"></circle><circle cx="8" cy="10.5" r="1.2"></circle></svg></span>
+            <sc-if value="{{ lane.renaming }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0">
+                <input value="{{ lane.draftValue }}" onFocus="{{ selectAll }}" onChange="{{ lane.onDraftChange }}" onKeyDown="{{ lane.onDraftKey }}" onBlur="{{ lane.onCommitName }}" autoFocus="{{ true }}" placeholder="Lane name" style="width:280px;height:24px;border:1px solid var(--ink);border-radius:2px;background:var(--surf);font-size:13px;font-weight:600;color:var(--ink);padding:0 8px">
+                <div style="display:flex;align-items:center;gap:4px">
+                  <sc-for list="{{ lane.swatches }}" as="sw" hint-placeholder-count="7">
+                    <button onMouseDown="{{ sw.onPick }}" title="{{ sw.title }}" style="width:18px;height:18px;padding:0;border-radius:3px;cursor:pointer;background:{{ sw.color }};border:2px solid {{ sw.ring }};box-shadow:0 0 0 1px var(--line2)"></button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ lane.notRenaming }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;gap:6px;min-width:0;flex-shrink:0;max-width:100%">
+                <button onClick="{{ lane.onToggle }}" title="Expand / collapse lane" style="width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:0;border-radius:3px;background:transparent;cursor:pointer;padding:0;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink3);transition:background 150ms ease-out,color 150ms ease-out" style-hover="background:var(--ink-a06);color:var(--ink)">{{ lane.chevron }}</button>
+                <button onClick="{{ lane.onRename }}" title="Click to rename" style="display:flex;align-items:center;gap:8px;border:0;border-radius:3px;background:transparent;cursor:pointer;padding:2px 6px;margin:0 -6px;font-size:13px;font-weight:600;color:var(--ink);text-align:left;transition:background 150ms ease-out" style-hover="background:var(--ink-a06)"><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ lane.name }}</span><span style="flex-shrink:0;font-family:'IBM Plex Mono',monospace;font-weight:400;color:var(--ink3)">{{ lane.count }}</span></button>
+              </div>
+            </sc-if>
+            <span style="flex:1;min-width:0;font-size:12px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ lane.hint }}</span>
+            <div style="margin-left:auto;flex-shrink:0;display:flex;align-items:center;gap:10px;font-size:11px;color:var(--ink3)">
+              <span style="white-space:nowrap"><span style="font-family:'IBM Plex Mono',monospace;color:var(--accent)">{{ lane.contribs }}</span> contributions</span>
+              <div style="display:flex;width:120px;height:6px;gap:1px">
+                <sc-for list="{{ lane.dist }}" as="d" hint-placeholder-count="3"><div style="width:{{ d.w }}%;background:{{ d.color }}"></div></sc-for>
+              </div>
+              <button onClick="{{ lane.onDelete }}" title="Delete lane" style="width:20px;height:20px;border:1px solid var(--line2);border-radius:4px;background:var(--surf);cursor:pointer;color:var(--ink3);font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background 150ms ease-out,color 150ms ease-out,border-color 150ms ease-out" style-hover="background:var(--danger-soft);color:var(--danger);border-color:var(--danger)">×</button>
+            </div>
+          </div>
+          <sc-if value="{{ lane.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;align-items:stretch;min-height:120px;overflow-x:auto;overflow-y:hidden">
+              <sc-for list="{{ lane.cols }}" as="col" hint-placeholder-count="3">
+                <sc-if value="{{ col.open }}" hint-placeholder-val="{{ true }}">
+                  <div onDragOver="{{ allowDrop }}" onDrop="{{ col.onDrop }}" onDoubleClick="{{ col.onDblAdd }}" style="flex:0 0 {{ colWidth }}px;display:flex;flex-direction:column;min-width:0;padding:0 10px 10px;border-right:1px solid var(--line)">
+                    <div draggable="{{ col.draggable }}" onDragStart="{{ col.onColDragStart }}" onDragOver="{{ col.onColDragOver }}" onDrop="{{ col.onColDrop }}" onDragEnd="{{ col.onColDragEnd }}" title="Drag to reorder columns" style="display:flex;align-items:center;gap:6px;padding:5px 0 6px;min-height:31px;box-shadow:{{ col.headShadow }};cursor:grab">
+                      <span style="display:flex;flex-shrink:0;color:var(--ink4)"><svg width="8" height="12" viewBox="0 0 8 12" fill="currentColor"><circle cx="1.6" cy="2.4" r="1"></circle><circle cx="6.4" cy="2.4" r="1"></circle><circle cx="1.6" cy="6" r="1"></circle><circle cx="6.4" cy="6" r="1"></circle><circle cx="1.6" cy="9.6" r="1"></circle><circle cx="6.4" cy="9.6" r="1"></circle></svg></span>
+                      <sc-if value="{{ col.renaming }}" hint-placeholder-val="{{ false }}">
+                        <input value="{{ col.draftValue }}" onFocus="{{ selectAll }}" onChange="{{ col.onDraftChange }}" onKeyDown="{{ col.onDraftKey }}" onBlur="{{ col.onCommit }}" onDoubleClick="{{ stop }}" autoFocus="{{ true }}" style="flex:1;min-width:0;height:22px;border:1px solid var(--ink);border-radius:2px;background:var(--surf);font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink);padding:0 6px">
+                      </sc-if>
+                      <sc-if value="{{ col.notRenaming }}" hint-placeholder-val="{{ true }}">
+                        <div style="display:flex;align-items:center;gap:4px;min-width:0">
+                          <button onClick="{{ col.onToggle }}" title="Collapse column" style="width:18px;height:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:0;border-radius:3px;background:transparent;cursor:pointer;padding:0;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink3);transition:background 150ms ease-out,color 150ms ease-out" style-hover="background:var(--ink-a06);color:var(--ink)">{{ col.chevron }}</button>
+                          <button onClick="{{ col.onRename }}" title="Click to rename" style="display:flex;align-items:center;gap:6px;border:0;border-radius:3px;background:transparent;cursor:pointer;padding:2px 5px;margin:0 -5px;font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink);transition:background 150ms ease-out" style-hover="background:var(--ink-a06)">{{ col.name }}<span style="font-family:'IBM Plex Mono',monospace;font-weight:400;color:var(--ink3);text-transform:none;letter-spacing:0">{{ col.count }}</span></button>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ col.removable }}" hint-placeholder-val="{{ false }}">
+                        <button onClick="{{ col.onRemove }}" onDoubleClick="{{ stop }}" title="Delete empty column" style="margin-left:auto;width:20px;height:20px;border:1px solid var(--line);border-radius:4px;background:var(--surf);cursor:pointer;color:var(--ink3);font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background 150ms ease-out" style-hover="background:var(--surf2)">×</button>
+                      </sc-if>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:6px;padding:2px 0 0;flex:1">
+                      <sc-for list="{{ col.cards }}" as="card" hint-placeholder-count="2">
+                        <div draggable="true" onDragStart="{{ card.onDragStart }}" onClick="{{ card.onOpen }}" onDoubleClick="{{ stop }}" style="display:flex;box-shadow:{{ card.edge }};background:{{ card.bg }};border:1px solid var(--line);border-radius:4px;cursor:grab;overflow:hidden;transition:border-color 150ms ease-out" style-hover="border-color:var(--ink)">
+                          <div style="flex:1;min-width:0;padding:7px 9px;display:flex;flex-direction:column;gap:5px">
+                            <div style="display:flex;gap:6px;align-items:flex-start;justify-content:space-between">
+                              <span style="font-size:13px;line-height:1.35;color:var(--ink);display:block;min-height:35px">{{ card.title }}</span>
+                              <span style="display:flex;align-items:center;gap:5px;flex-shrink:0">
+                                <sc-if value="{{ card.sevGlyph }}" hint-placeholder-val="{{ false }}"><span title="{{ card.sevTitle }}" style="font-size:11px;line-height:1;color:{{ card.sevColor }}">{{ card.sevGlyph }}</span></sc-if>
+                                <sc-if value="{{ card.hasObstacle }}" hint-placeholder-val="{{ false }}">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--danger)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><title>Obstacle</title><path d="M10.3 3.6 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+                                </sc-if>
+                                <sc-if value="{{ card.showPrio }}" hint-placeholder-val="{{ false }}">
+                                  <span title="{{ card.prio }}" style="display:flex;align-items:center;color:{{ card.prioColor }}">
+                                    <sc-if value="{{ card.isP1 }}" hint-placeholder-val="{{ false }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 11-5-5-5 5"></path><path d="m17 18-5-5-5 5"></path></svg></sc-if>
+                                    <sc-if value="{{ card.isP3 }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 6 5 5 5-5"></path><path d="m7 13 5 5 5-5"></path></svg></sc-if>
+                                  </span>
+                                </sc-if>
+                              </span>
+                            </div>
+                            <sc-if value="{{ card.hasTaxonomy }}" hint-placeholder-val="{{ true }}">
+                              <div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center">
+                                <sc-for list="{{ card.labels }}" as="l" hint-placeholder-count="1"><span style="font-size:10px;letter-spacing:0.05em;text-transform:uppercase;padding:0 4px;border:1px solid {{ l.border }};border-radius:2px;background:{{ l.bg }};color:{{ l.color }}">{{ l.name }}</span></sc-for>
+                              </div>
+                            </sc-if>
+                            <sc-if value="{{ card.hasLinks }}" hint-placeholder-val="{{ false }}">
+                              <div style="display:flex;flex-direction:column;gap:2px;margin:3px -9px -7px;padding:6px 9px;background:var(--ink-a06);border-top:1px solid var(--ink-a10)">
+                                <sc-for list="{{ card.objTags }}" as="t" hint-placeholder-count="1"><span style="font-size:11px;color:var(--ink2)">{{ t.name }}</span></sc-for>
+                                <sc-for list="{{ card.outTags }}" as="t" hint-placeholder-count="1"><span style="font-size:11px;color:var(--accent)">→ {{ t.name }}</span></sc-for>
+                              </div>
+                            </sc-if>
+                          </div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ col.closed }}" hint-placeholder-val="{{ false }}">
+                  <div draggable="{{ col.draggable }}" onDragStart="{{ col.onColDragStart }}" onDragOver="{{ col.onColDragOverAny }}" onDrop="{{ col.onColDropAny }}" onDragEnd="{{ col.onColDragEnd }}" onClick="{{ col.onToggle }}" title="Click to expand · drag to reorder" style="flex:0 0 34px;margin:2px 6px 10px;border:1px solid var(--line);border-radius:4px;background:var(--surf);box-shadow:{{ col.headShadow }};display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 0;cursor:pointer">
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink)">{{ col.count }}</span>
+                    <span style="writing-mode:vertical-rl;font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink2)">{{ col.name }}</span>
+                  </div>
+                </sc-if>
+              </sc-for>
+              <button onClick="{{ lane.onAddCol }}" title="Add column" style="flex:0 0 34px;margin:2px 6px 10px;border:1px dashed var(--line2);border-radius:4px;background:transparent;display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 0;cursor:pointer;color:var(--ink3);transition:background 150ms ease-out" style-hover="background:var(--surf)">
+                <span style="font-size:14px;line-height:1">+</span>
+                <span style="writing-mode:vertical-rl;font-size:10px;letter-spacing:0.05em;text-transform:uppercase">Column</span>
+              </button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+      <sc-if value="{{ lane.showAdd }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ lane.onAddBelow }}" title="Add a lane here" style="display:flex;align-items:center;justify-content:center;gap:7px;height:22px;border:1px dashed var(--line2);border-radius:4px;background:transparent;cursor:pointer;color:var(--ink4);font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;transition:background 150ms ease-out,color 150ms ease-out" style-hover="background:var(--surf);color:var(--ink)">
+        <span style="font-size:13px;line-height:1;font-weight:400">+</span>Lane
+      </button>
+      </sc-if>
+    </sc-for>
+
+    <sc-if value="{{ noLanes }}" hint-placeholder-val="{{ false }}">
+    <button onClick="{{ onAddLane }}" title="Add lane" style="display:flex;align-items:center;justify-content:center;gap:8px;height:36px;border:1px dashed var(--line2);border-radius:4px;background:transparent;cursor:pointer;color:var(--ink3);font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;transition:background 150ms ease-out,color 150ms ease-out" style-hover="background:var(--surf);color:var(--ink)">
+      <span style="font-size:15px;line-height:1;font-weight:400">+</span>Lane
+    </button>
+    </sc-if>
+  </div>
+    </div>
+  </div>
+
+  <!-- Delete lane -->
+  <sc-if value="{{ laneKillOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ laneKill.onCancel }}" style="position:fixed;inset:0;background:var(--scrim);z-index:40;display:flex;align-items:center;justify-content:center;padding:40px 24px">
+      <div onClick="{{ stop }}" style="width:500px;max-width:100%;background:var(--surf);border:1px solid var(--line);border-radius:4px;box-shadow:0 1px 2px var(--shadow);display:flex;flex-direction:column">
+        <div style="padding:14px 20px;border-bottom:1px solid var(--line);background:var(--surf2)">
+          <span style="display:block;width:32px;height:4px;background:{{ laneKill.color }};margin-bottom:8px"></span>
+          <div style="font-size:16px;font-weight:700;color:var(--ink)">Delete {{ laneKill.name }}</div>
+          <div style="font-size:12px;color:var(--ink2)">{{ laneKill.summary }}</div>
+        </div>
+        <div style="padding:14px 20px;display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Move cards to</div>
+          <div style="display:flex;flex-direction:column;border:1px solid var(--line);border-radius:4px;overflow:hidden">
+            <sc-for list="{{ laneKill.targets }}" as="t" hint-placeholder-count="3">
+              <div onClick="{{ t.onPick }}" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);cursor:pointer;background:{{ t.bg }};transition:background 150ms ease-out">
+                <span style="width:11px;height:11px;flex-shrink:0;border-radius:50%;border:1px solid {{ t.dotBorder }};background:{{ t.dotBg }}"></span>
+                <span style="width:3px;height:14px;flex-shrink:0;background:{{ t.color }}"></span>
+                <span style="flex:1;min-width:0;font-size:12px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.name }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink3)">{{ t.count }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ laneKill.intakeNote }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:12px;color:var(--ink2);padding-top:2px">Cards lose their column and are laid out freely in intake, which grows to fit them.</div>
+          </sc-if>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid var(--line);background:var(--surf2)">
+          <button onClick="{{ laneKill.onCancel }}" style="height:28px;padding:0 12px;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:12px;color:var(--ink2);cursor:pointer;transition:background 150ms ease-out" style-hover="background:var(--surf3)">Cancel</button>
+          <button onClick="{{ laneKill.onConfirm }}" style="height:28px;padding:0 12px;border:1px solid var(--danger-solid);border-radius:4px;background:var(--danger-solid);font-size:12px;font-weight:600;color:var(--on-color);cursor:pointer;transition:background 150ms ease-out" style-hover="background:var(--danger-solid-hover)">Move cards and delete</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+
+  <!-- Card modal -->
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ modal.onClose }}" style="position:fixed;inset:0;background:var(--scrim);z-index:30;display:flex;align-items:flex-start;justify-content:center;padding:40px 24px;overflow:auto">
+      <div onClick="{{ stop }}" style="width:1040px;max-width:100%;background:var(--surf);border:1px solid var(--line);border-radius:4px;box-shadow:0 1px 2px var(--shadow);display:flex;flex-direction:column;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:12px;padding:9px 12px 9px 16px;border-bottom:1px solid var(--line);background:var(--surf2)">
+          <span style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink);white-space:nowrap">{{ modal.laneName }}</span>
+          <div style="display:flex;gap:2px;padding:2px;border:1px solid var(--line);border-radius:4px;background:var(--surf3)">
+            <sc-for list="{{ modal.stateSegs }}" as="c" hint-placeholder-count="3">
+              <button onClick="{{ c.onPick }}" style="height:24px;padding:0 14px;border:0;border-radius:3px;font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;background:{{ c.bg }};color:{{ c.color }};transition:background 150ms ease-out">{{ c.name }}</button>
+            </sc-for>
+          </div>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+<button onPointerDown="{{ modal.onHoldStart }}" onPointerUp="{{ modal.onHoldEnd }}" onPointerLeave="{{ modal.onHoldEnd }}" title="Hold 2s to archive" style="position:relative;overflow:hidden;height:28px;padding:0 10px;flex-shrink:0;background:var(--surf);border:1px solid {{ modal.holdBorder }};border-radius:4px;font-size:12px;color:{{ modal.holdColor }};cursor:pointer;display:flex;align-items:center;gap:6px;transition:color 150ms ease-out,border-color 150ms ease-out">
+              <span style="position:absolute;left:0;top:0;bottom:0;width:{{ modal.holdW }}%;background:var(--danger-soft);transition:width {{ modal.holdMs }}ms linear"></span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="position:relative"><rect x="3" y="4" width="18" height="4" rx="1"></rect><path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8"></path><path d="M10 12h4"></path></svg>
+              <span style="position:relative">Archive</span>
+            </button>
+            <button onClick="{{ modal.onClose }}" title="Close" style="width:28px;height:28px;background:var(--surf);border:1px solid var(--line);border-radius:4px;font-size:15px;line-height:1;color:var(--ink2);cursor:pointer;transition:background 150ms ease-out" style-hover="background:var(--surf2)">×</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 300px">
+          <div style="min-width:0;padding:18px 20px;display:flex;flex-direction:column;gap:14px;border-right:1px solid var(--line)">
+            <input value="{{ modal.title }}" onChange="{{ modal.onTitle }}" style="width:100%;font-size:18px;font-weight:600;border:0;border-bottom:1px solid var(--line);padding:4px 0;background:transparent;color:var(--ink)">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <label style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Description</label>
+                <div style="margin-left:auto;display:flex;gap:4px">
+                  <button onClick="{{ modal.onWrite }}" style="height:22px;padding:0 10px;border-radius:2px;font-size:10px;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;border:1px solid {{ modal.writeChip.border }};background:{{ modal.writeChip.bg }};color:{{ modal.writeChip.color }}">Write</button>
+                  <button onClick="{{ modal.onPreview }}" style="height:22px;padding:0 10px;border-radius:2px;font-size:10px;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;border:1px solid {{ modal.previewChip.border }};background:{{ modal.previewChip.bg }};color:{{ modal.previewChip.color }}">Preview</button>
+                </div>
+              </div>
+              <sc-if value="{{ modal.writing }}" hint-placeholder-val="{{ true }}">
+                <textarea value="{{ modal.desc }}" onChange="{{ modal.onDesc }}" onPaste="{{ modal.onDescPaste }}" rows="7" placeholder="What this task is, in markdown. Paste an image to attach it." style="width:100%;border:1px solid var(--line);border-radius:4px;padding:8px 10px;font-size:12px;line-height:1.55;color:var(--ink);background:var(--surf);resize:vertical"></textarea>
+                <sc-if value="{{ modal.hasImages }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    <sc-for list="{{ modal.images }}" as="im" hint-placeholder-count="0">
+                      <div title="{{ im.name }}" role="img" aria-label="{{ im.name }}" style="position:relative;width:64px;height:48px;border:1px solid var(--line);border-radius:4px;overflow:hidden;background-color:var(--surf3);background-image:{{ im.bg }};background-size:cover;background-position:center">
+                        <button onClick="{{ im.onRemove }}" title="Remove image" style="position:absolute;top:2px;right:2px;width:16px;height:16px;display:flex;align-items:center;justify-content:center;border:0;border-radius:3px;background:var(--scrim);color:#ffffff;font-size:11px;line-height:1;cursor:pointer">×</button>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </sc-if>
+              <sc-if value="{{ modal.previewing }}" hint-placeholder-val="{{ false }}">
+                <div style="width:100%;min-height:132px;border:1px solid var(--line);border-radius:4px;padding:8px 12px;font-size:12px;line-height:1.55;color:var(--ink);background:var(--surf2)">{{ modal.descHtml }}</div>
+              </sc-if>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <label style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--danger)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.6 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>Obstacles
+                </label>
+                <div style="margin-left:auto;display:flex;gap:4px">
+                  <button onClick="{{ modal.onObsWrite }}" style="height:22px;padding:0 10px;border-radius:2px;font-size:10px;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;border:1px solid {{ modal.obsWriteChip.border }};background:{{ modal.obsWriteChip.bg }};color:{{ modal.obsWriteChip.color }}">Write</button>
+                  <button onClick="{{ modal.onObsPreview }}" style="height:22px;padding:0 10px;border-radius:2px;font-size:10px;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;border:1px solid {{ modal.obsPreviewChip.border }};background:{{ modal.obsPreviewChip.bg }};color:{{ modal.obsPreviewChip.color }}">Preview</button>
+                </div>
+              </div>
+              <sc-if value="{{ modal.obsWriting }}" hint-placeholder-val="{{ true }}">
+                <textarea value="{{ modal.obstacles }}" onChange="{{ modal.onObstacles }}" rows="3" placeholder="What blocks this task, in markdown." style="width:100%;border:1px solid var(--line);border-radius:4px;padding:8px 10px;font-size:12px;line-height:1.55;color:var(--ink);background:var(--surf);resize:vertical"></textarea>
+              </sc-if>
+              <sc-if value="{{ modal.obsPreviewing }}" hint-placeholder-val="{{ false }}">
+                <div style="width:100%;min-height:66px;border:1px solid var(--line);border-radius:4px;padding:8px 12px;font-size:12px;line-height:1.55;color:var(--ink);background:var(--surf2)">{{ modal.obsHtml }}</div>
+              </sc-if>
+            </div>
+          </div>
+
+          <div style="min-width:0;padding:18px 20px;display:flex;flex-direction:column;gap:16px;background:var(--surf2)">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div title="Priority" style="position:relative;height:28px;padding:2px;border:1px solid var(--line);border-radius:4px;background:var(--surf3);display:grid;grid-template-columns:repeat(3,1fr)">
+                <div style="position:absolute;top:2px;bottom:2px;left:2px;width:calc((100% - 4px)/3);border-radius:3px;background:var(--ink);transform:translateX({{ modal.prioThumb }});transition:transform 200ms cubic-bezier(0.4,0,0.2,1)"></div>
+                <sc-for list="{{ modal.prioChips }}" as="c" hint-placeholder-count="3">
+                  <button onClick="{{ c.onPick }}" title="{{ c.title }}" style="position:relative;z-index:1;height:22px;border:0;background:transparent;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;color:{{ c.color }};transition:color 150ms ease-out">
+                    <sc-if value="{{ c.isP1 }}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 11-5-5-5 5"></path><path d="m17 18-5-5-5 5"></path></svg></sc-if>
+                    <sc-if value="{{ c.isP2 }}" hint-placeholder-val="{{ true }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 5-5-5-5"></path><path d="m4 17 5-5-5-5"></path></svg></sc-if>
+                    <sc-if value="{{ c.isP3 }}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 6 5 5 5-5"></path><path d="m7 13 5 5 5-5"></path></svg></sc-if>{{ c.name }}
+                  </button>
+                </sc-for>
+              </div>
+              <div title="Severity" style="position:relative;height:28px;padding:2px;border:1px solid var(--line);border-radius:4px;background:var(--surf3);display:grid;grid-template-columns:repeat(3,1fr)">
+                <div style="position:absolute;top:2px;bottom:2px;left:2px;width:calc((100% - 4px)/3);border-radius:3px;background:var(--ink);transform:translateX({{ modal.sevThumb }});transition:transform 200ms cubic-bezier(0.4,0,0.2,1)"></div>
+                <sc-for list="{{ modal.sevChips }}" as="c" hint-placeholder-count="3">
+                  <button onClick="{{ c.onPick }}" title="{{ c.title }}" style="position:relative;z-index:1;height:22px;border:0;background:transparent;font-size:11px;font-weight:600;letter-spacing:0.02em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;color:{{ c.color }};transition:color 150ms ease-out"><span style="font-size:9px;line-height:1">{{ c.glyph }}</span>{{ c.name }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Dateline</label>
+              <input type="date" value="{{ modal.dateline }}" onChange="{{ modal.onDateline }}" style="width:100%;height:28px;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-size:12px;font-family:'IBM Plex Mono',monospace;padding:0 8px">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Labels</label>
+              <div style="display:flex;flex-wrap:wrap;gap:4px">
+                <sc-for list="{{ modal.labelToggles }}" as="c" hint-placeholder-count="5">
+                  <button onClick="{{ c.onToggle }}" style="height:22px;padding:0 8px;border-radius:2px;font-size:10px;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};transition:background 150ms ease-out">{{ c.name }}</button>
+                </sc-for>
+              </div>
+              <input value="{{ labelDraft }}" onChange="{{ onLabelDraft }}" onKeyDown="{{ modal.onNewLabelKey }}" placeholder="New label ↵" style="width:100%;height:24px;border:1px dashed var(--ink4);border-radius:2px;background:var(--surf);font-size:10px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink);padding:0 6px">
+            </div>
+          </div>
+        </div>
+
+        <!-- Objectives / Outcomes multi-select -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)">
+          <div style="min-width:0;padding:16px 20px;display:flex;flex-direction:column;gap:8px;border-right:1px solid var(--line)">
+            <div style="display:flex;align-items:baseline;justify-content:space-between">
+              <label style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Objectives</label>
+              <span style="font-size:11px;color:var(--ink3)"><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ modal.objCount }}</span> linked · multi-select</span>
+            </div>
+            <div style="display:flex;flex-direction:column;border:1px solid var(--line);border-radius:4px;overflow:hidden">
+              <sc-for list="{{ modal.objRows }}" as="o" hint-placeholder-count="5">
+                <div onClick="{{ o.onToggle }}" style="display:flex;align-items:center;gap:10px;padding:7px 10px 7px {{ o.indent }}px;border-bottom:1px solid var(--line);cursor:pointer;background:{{ o.bg }};transition:background 150ms ease-out" style-hover="background:var(--surf2)">
+                  <span style="width:12px;height:12px;flex-shrink:0;border:1px solid {{ o.boxBorder }};background:{{ o.boxBg }}"></span>
+                  <span style="flex:1;min-width:0;font-size:12px;font-weight:{{ o.weight }};color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.name }}</span>
+                  <span style="font-size:9px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3);white-space:nowrap">{{ o.horizon }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="min-width:0;padding:16px 20px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:baseline;justify-content:space-between">
+              <label style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Outcomes</label>
+              <span style="font-size:11px;color:var(--ink3)"><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ modal.outCount }}</span> linked · multi-select</span>
+            </div>
+            <div style="display:flex;flex-direction:column;border:1px solid var(--line);border-radius:4px;overflow:hidden">
+              <sc-for list="{{ modal.outRows }}" as="o" hint-placeholder-count="4">
+                <div onClick="{{ o.onToggle }}" style="display:flex;align-items:center;gap:10px;padding:7px 10px;border-bottom:1px solid var(--line);cursor:pointer;background:{{ o.bg }};transition:background 150ms ease-out" style-hover="background:var(--surf2)">
+                  <span style="width:12px;height:12px;flex-shrink:0;border:1px solid {{ o.boxBorder }};background:{{ o.boxBg }}"></span>
+                  <span style="flex:1;min-width:0;font-size:12px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.name }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity log -->
+        <div style="display:flex;flex-direction:column;gap:12px;padding:16px 20px 20px;border-top:1px solid var(--line);background:var(--surf2)">
+          <div style="display:flex;align-items:baseline;gap:14px">
+            <label style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Activity log</label>
+            <span style="font-size:12px;color:var(--ink2)"><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ modal.entryCount }}</span> entries · <span style="font-family:'IBM Plex Mono',monospace;color:var(--accent)">{{ modal.contribCount }}</span> attributed to an outcome</span>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;border:1px solid var(--line);border-radius:4px;background:var(--surf);padding:12px">
+            <div style="display:flex;align-items:center;gap:6px">
+              <button onClick="{{ modal.callChip.onPick }}" style="height:30px;padding:0 14px;border-radius:4px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:7px;border:1px solid {{ modal.callChip.border }};background:{{ modal.callChip.bg }};color:{{ modal.callChip.color }};transition:background 150ms ease-out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>Call</button>
+              <button onClick="{{ modal.meetingChip.onPick }}" style="height:30px;padding:0 14px;border-radius:4px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:7px;border:1px solid {{ modal.meetingChip.border }};background:{{ modal.meetingChip.bg }};color:{{ modal.meetingChip.color }};transition:background 150ms ease-out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Meeting</button>
+              <button onClick="{{ modal.focusChip.onPick }}" style="height:30px;padding:0 14px;border-radius:4px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:7px;border:1px solid {{ modal.focusChip.border }};background:{{ modal.focusChip.bg }};color:{{ modal.focusChip.color }};transition:background 150ms ease-out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2h4"></path><path d="M12 14l3-3"></path><circle cx="12" cy="14" r="8"></circle></svg>Focus</button>
+              <button onClick="{{ modal.multiChip.onPick }}" style="height:30px;padding:0 14px;border-radius:4px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:7px;border:1px solid {{ modal.multiChip.border }};background:{{ modal.multiChip.bg }};color:{{ modal.multiChip.color }};transition:background 150ms ease-out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.8-1.1 2-1.7 3.3-1.7H22"></path><path d="m18 2 4 4-4 4"></path><path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"></path><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"></path><path d="m18 14 4 4-4 4"></path></svg>Multitasking</button>
+              <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+                <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Hours</span>
+                <input value="{{ modal.draft.hours }}" onChange="{{ modal.onDraftHours }}" placeholder="0.0" inputMode="decimal" style="width:58px;height:30px;border:1px solid var(--line);border-radius:4px;background:var(--surf);font-family:'IBM Plex Mono',monospace;font-size:12px;text-align:center;color:var(--ink)">
+              </div>
+            </div>
+            <textarea value="{{ modal.draft.text }}" onChange="{{ modal.onDraftText }}" rows="5" placeholder="What was contributed — one entry per log.
+!Artefact produced
++Value produced
+Reviewed with @R.Okafor" style="width:100%;border:1px solid var(--line);border-radius:4px;padding:10px 12px;font-size:12px;line-height:1.6;color:var(--ink);background:var(--surf);resize:vertical"></textarea>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:2px;border-top:1px solid var(--surf3)">
+              <span style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3);padding-top:8px">Contributes to</span>
+              <sc-for list="{{ modal.draftOutChips }}" as="c" hint-placeholder-count="2">
+                <button onClick="{{ c.onToggle }}" style="margin-top:8px;height:24px;padding:0 9px;border-radius:2px;font-size:11px;cursor:pointer;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};transition:background 150ms ease-out">→ {{ c.name }}</button>
+              </sc-for>
+              <sc-if value="{{ modal.noDraftOut }}" hint-placeholder-val="{{ false }}">
+                <span style="margin-top:8px;font-size:11px;color:var(--ink3)">No outcomes linked to this task yet.</span>
+              </sc-if>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <sc-for list="{{ modal.parsed.artefacts }}" as="a" hint-placeholder-count="0"><span style="display:flex;align-items:baseline;gap:5px;font-size:11px;padding:2px 6px;border:1px solid var(--ink);border-radius:2px;color:var(--ink)"><span style="font-size:9px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Artefact</span>{{ a.name }}</span></sc-for>
+              <sc-for list="{{ modal.parsed.values }}" as="v" hint-placeholder-count="0"><span style="display:flex;align-items:baseline;gap:5px;font-size:11px;padding:2px 6px;border-radius:2px;background:var(--accent-soft);color:var(--accent)"><span style="font-size:9px;letter-spacing:0.05em;text-transform:uppercase">Value</span>{{ v.name }}</span></sc-for>
+              <sc-for list="{{ modal.parsed.people }}" as="p" hint-placeholder-count="0"><span style="font-size:11px;color:var(--ink2)">@{{ p.name }}</span></sc-for>
+              <button onClick="{{ modal.onAddLog }}" style="margin-left:auto;height:30px;padding:0 18px;background:var(--ink);border:0;border-radius:4px;font-size:12px;font-weight:600;color:var(--on-ink);cursor:pointer;transition:background 150ms ease-out" style-hover="background:var(--ink-hover)">Log entry</button>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;border:1px solid var(--line);border-radius:4px;background:var(--surf);overflow:hidden">
+            <sc-for list="{{ modal.log }}" as="e" hint-placeholder-count="2">
+              <div style="display:grid;grid-template-columns:80px 128px 46px minmax(0,1fr);gap:12px;padding:10px 12px;border-bottom:1px solid var(--line);align-items:start">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:19px;color:var(--ink3)">{{ e.date }}</span>
+                <span style="display:flex;align-items:center;gap:6px;height:19px;font-size:10px;letter-spacing:0.05em;text-transform:uppercase;font-weight:600;color:var(--ink)">
+                  <sc-if value="{{ e.isCall }}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--ink2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></sc-if>
+                  <sc-if value="{{ e.isMeeting }}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--ink2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></sc-if>
+                  <sc-if value="{{ e.isFocus }}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--ink2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2h4"></path><path d="M12 14l3-3"></path><circle cx="12" cy="14" r="8"></circle></svg></sc-if>
+                  <sc-if value="{{ e.isMulti }}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--ink2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.8-1.1 2-1.7 3.3-1.7H22"></path><path d="m18 2 4 4-4 4"></path><path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"></path><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"></path><path d="m18 14 4 4-4 4"></path></svg></sc-if>{{ e.type }}
+                </span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:19px;color:var(--ink3);text-align:right">{{ e.hours }}</span>
+                <div style="min-width:0;display:flex;flex-direction:column;gap:5px">
+                  <div style="font-size:12px;line-height:19px;color:var(--ink);text-wrap:pretty">{{ e.noteHtml }}</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center">
+                    <sc-for list="{{ e.outcomes }}" as="o" hint-placeholder-count="0"><span style="font-size:11px;padding:1px 6px;border-radius:2px;background:var(--accent-wash);color:var(--accent)">→ {{ o.name }}</span></sc-for>
+                    <sc-for list="{{ e.artefacts }}" as="a" hint-placeholder-count="0"><span style="display:flex;align-items:baseline;gap:5px;font-size:11px;padding:1px 6px;border:1px solid var(--ink);border-radius:2px;color:var(--ink)"><span style="font-size:9px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink3)">Artefact</span>{{ a.name }}</span></sc-for>
+                    <sc-for list="{{ e.values }}" as="v" hint-placeholder-count="0"><span style="display:flex;align-items:baseline;gap:5px;font-size:11px;padding:1px 6px;border-radius:2px;background:var(--accent-soft);color:var(--accent)"><span style="font-size:9px;letter-spacing:0.05em;text-transform:uppercase">Value</span>{{ v.name }}</span></sc-for>
+                    <sc-for list="{{ e.people }}" as="p" hint-placeholder-count="0"><span style="font-size:11px;color:var(--ink2)">@{{ p.name }}</span></sc-for>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ modal.logEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:14px 12px;font-size:12px;color:var(--ink3)">No activity logged yet.</div></sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Light&quot;,&quot;Dark&quot;],&quot;default&quot;:&quot;Light&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;internalFirst&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;intakeHeight&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:190,&quot;min&quot;:120,&quot;max&quot;:480,&quot;step&quot;:10,&quot;unit&quot;:&quot;px&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;colWidth&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:360,&quot;min&quot;:200,&quot;max&quot;:480,&quot;step&quot;:4,&quot;unit&quot;:&quot;px&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;cardAccent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Off&quot;,&quot;Lane&quot;,&quot;Priority&quot;],&quot;default&quot;:&quot;Off&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Colour coding&quot;}}">
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    const T = (lane, col, title, o = {}) => Object.assign({ key: "t" + (T.n = (T.n || 0) + 1), lane, col, title, desc: "", obstacles: "", labels: [], prio: "P2", sev: "Low", dateline: "", objectives: [], outcomes: [], log: [], archived: false, x: 0, y: 0 }, o);
+    const L = (date, type, note, o = {}) => Object.assign({ date, type, note, hours: type === "Meeting" ? "1" : type === "Call" ? "0.5" : type === "Multitasking" ? "1.5" : "2", artefacts: [], values: [], people: [], outcomes: [] }, o);
+    this.state = {
+      tasks: [
+        T("intake", "", "Ask for read access to SharePoint audit logs", { prio: "P2", objectives: ["SP connector"], x: 16, y: 14, desc: "Needed to verify delta-query coverage against real change history." }),
+        T("intake", "", "Nightly eval run on golden set", { labels: ["eval"], prio: "P3", x: 16, y: 132, desc: "Idea from Tuesday review. Needs the runner first." }),
+        T("intake", "", "Legal wants PII redaction demo before pilot", { labels: ["ai", "security"], prio: "P2", sev: "High", obstacles: "Legal contact not yet assigned on the client side.", x: 16, y: 250 }),
+        T("client", "Pending", "Draft incremental sync design for SharePoint connector", { labels: ["infra"], prio: "P1", objectives: ["SP connector"], dateline: "2026-09-03", desc: "Cover **token storage**, failure modes, and backfill.\n\n- Delta vs full crawl\n- Retry and 429 policy\n\n[Sync design notes](https://wiki.example/fde/sharepoint-sync)" }),
+        T("client", "Pending", "Prepare demo script for finance stakeholders", { labels: ["docs"], prio: "P2", objectives: ["Demos"], dateline: "2026-09-04" }),
+        T("client", "In Action", "Implement SharePoint delta-query ingestion", { labels: ["infra", "ai"], prio: "P1", sev: "High", objectives: ["SP connector", "RAG pilot"], outcomes: ["SP connector handover"], dateline: "2026-09-05", desc: "Replace the full crawl with Graph delta queries; persist delta tokens per site.", obstacles: "Graph API returns 429 after ~2,000 items; backoff policy under review with client IT.", log: [L("Sep 1", "Focus", "Delta token persistence plus a retry wrapper.", { artefacts: ["PR #142"], outcomes: ["SP connector handover"] }), L("Sep 2", "Call", "Throttling limits with client IT.", { people: ["R.Okafor"], values: ["10 req/s ceiling agreed"], outcomes: ["SP connector handover"] })] }),
+        T("client", "In Action", "Tune retrieval chunking for 10-K style documents", { labels: ["ai", "eval"], prio: "P2", objectives: ["RAG pilot"], outcomes: ["Latency 2.1s → 0.8s"], log: [L("Aug 29", "Focus", "Section-aware chunking experiment.", { artefacts: ["Notebook chunking-v3"], values: ["Recall@5 0.71 → 0.84"], outcomes: ["Latency 2.1s → 0.8s"] })] }),
+        T("client", "Staged", "Cache embeddings for repeat queries", { labels: ["infra"], prio: "P1", objectives: ["RAG pilot"], outcomes: ["Latency 2.1s → 0.8s"], log: [L("Aug 27", "Focus", "Redis cache layer with eviction policy.", { artefacts: ["PR #131"], values: ["p50 latency 2.1s → 0.8s (62% reduction)"], outcomes: ["Latency 2.1s → 0.8s"] })] }),
+        T("client", "Staged", "Security questionnaire sections 4–7", { labels: ["docs", "security"], prio: "P2", outcomes: ["Security review passed"], log: [L("Aug 25", "Meeting", "Walkthrough with client security.", { people: ["M.Lindqvist", "A.Shah"], artefacts: ["Questionnaire v2"], outcomes: ["Security review passed"] })] }),
+        T("internal", "Pending", "Define eval metrics: faithfulness, groundedness", { labels: ["eval"], prio: "P2", objectives: ["Golden set"] }),
+        T("internal", "Pending", "Outline SA3 playbook chapter: integration patterns", { labels: ["docs"], prio: "P3", objectives: ["Playbook"] }),
+        T("internal", "In Action", "Build eval harness runner (CLI)", { labels: ["eval", "infra"], prio: "P1", objectives: ["Golden set", "Eval harness"], outcomes: ["Golden set v0.1"], dateline: "2026-09-04", log: [L("Sep 1", "Focus", "Runner skeleton and YAML case format.", { artefacts: ["eval-runner v0.1"], outcomes: ["Golden set v0.1"] })] }),
+        T("internal", "In Action", "Collect 50 golden-set Q/A pairs", { labels: ["eval"], prio: "P2", sev: "Medium", objectives: ["Golden set"], outcomes: ["Golden set v0.1"], obstacles: "Waiting on SME availability for the 20 remaining pairs.", log: [L("Aug 31", "Meeting", "Case review with the domain SME.", { people: ["J.Park"], values: ["30 cases approved"], outcomes: ["Golden set v0.1"] })] }),
+        T("internal", "Staged", "Eval harness repo scaffold and test script", { labels: ["eval"], prio: "P2", objectives: ["Golden set"] }),
+        T("continuous", "Now", "Daily client standup 09:15", { prio: "P3", log: [L("Sep 2", "Meeting", "Standup."), L("Sep 1", "Meeting", "Standup.")] }),
+        T("continuous", "Now", "Weekly status note to sponsor", { labels: ["docs"], prio: "P2", dateline: "2026-09-05" }),
+        T("continuous", "Soon", "Refresh FDE learning log", { prio: "P3", objectives: ["FDE proficiency"] }),
+        T("continuous", "Later", "Reading backlog: retrieval evaluation papers", { labels: ["ai"], prio: "P3", objectives: ["FDE proficiency"] }),
+      ],
+      laneDefs: [
+        { id: "client", name: "Client — Northwind Energy", hint: "Onsite engagement · RAG pilot", cols: ["Pending", "In Action", "Staged"], color: "var(--lane1)" },
+        { id: "internal", name: "Internal — AI projects", hint: "Employer initiatives · eval harness, playbook", cols: ["Pending", "In Action", "Staged"], color: "var(--lane2)" },
+        { id: "continuous", name: "Continuous", hint: "Always-on, routine, slow-moving", cols: ["Now", "Soon", "Later"], color: "var(--lane3)" },
+      ],
+      objectives: [
+        { name: "FDE proficiency", parent: "", horizon: "Long-term", measure: "Lead two client engagements end to end by Q2 2027 with sponsor NPS ≥ 8." },
+        { name: "RAG pilot", parent: "FDE proficiency", horizon: "Month", measure: "Client RAG pilot live for 40 finance users by Sep 30; p50 latency under 1s." },
+        { name: "SP connector", parent: "RAG pilot", horizon: "Week", measure: "Delta sync of 3 SharePoint sites without manual intervention by Sep 5." },
+        { name: "Demos", parent: "RAG pilot", horizon: "Week", measure: "Finance, Legal, and IT demos delivered, each with a follow-up decision logged." },
+        { name: "SA3 maturity", parent: "", horizon: "Long-term", measure: "Reusable evaluation and integration playbook adopted by two teams." },
+        { name: "Eval harness", parent: "SA3 maturity", horizon: "Month", measure: "Runner plus 100 golden cases, used on one client project by Sep 30." },
+        { name: "Golden set", parent: "Eval harness", horizon: "Week", measure: "50 reviewed cases; the CLI runner executes them in under 5 minutes." },
+        { name: "Playbook", parent: "SA3 maturity", horizon: "Month", measure: "Three chapters reviewed by the architecture guild by Sep 30." },
+      ],
+      outcomes: [
+        { name: "SP connector handover", desc: "Delta-query connector for 3 client sites, handed to client IT.", date: "2026-09-05", objective: "SP connector" },
+        { name: "Latency 2.1s → 0.8s", desc: "Embedding cache and chunking changes on the client retrieval path — 62% reduction.", date: "2026-08-28", objective: "RAG pilot" },
+        { name: "Golden set v0.1", desc: "50-case evaluation asset, reusable across internal RAG projects.", date: "2026-09-04", objective: "Golden set" },
+        { name: "Security review passed", desc: "Sections 4–7 accepted without follow-up findings.", date: "2026-08-26", objective: "RAG pilot" },
+      ],
+      allLabels: ["ai", "infra", "docs", "eval", "security"],
+      labelEdit: false, labelDraft: "", colDraft: null, laneDraft: null, laneKill: null, killTarget: null, intakeH: null,
+      collapsedLanes: {}, collapsedCols: {}, collapsedYears: {}, laneOver: null, colOver: null,
+      search: "", labelFilter: {}, prioFilter: {}, obstacleFilter: false, sevFilter: false, objFilter: {}, filtersOpen: false,
+      hold: null, tool: "objectives", panelOpen: true, logScope: "Month", logAnchor: "2026-09-08",
+      objEdit: null, outEdit: null, modalKey: null, quickAdd: "", logType: "Focus", draft: { text: "", outcomes: [], hours: "" }, descPreview: false, obsPreview: false,
+      nextId: 100, drag: null,
+      theme: p.theme === "Dark" ? "dark" : "light",
+    };
+  }
+  componentDidMount() {
+    this._esc = (e) => {
+      if (e.key !== "Escape") return;
+      if (this.state.objEdit) { this.saveObjective(true); return; }
+      if (this.state.outEdit) { this.saveOutcome(true); return; }
+      if (this.state.laneKill) { this.setState({ laneKill: null, killTarget: null }); return; }
+      if (this.state.laneDraft) { this.setState({ laneDraft: null }); return; }
+      if (this.state.colDraft) { this.setState({ colDraft: null }); return; }
+      if (this.state.modalKey) this.setState({ modalKey: null });
+      else if (this.state.panelOpen) this.setState({ panelOpen: false });
+    };
+    window.addEventListener("keydown", this._esc);
+    this.applyTheme(this.state.theme);
+  }
+  componentDidUpdate(prev) {
+    if (prev.theme !== this.props.theme) {
+      const t = this.props.theme === "Dark" ? "dark" : "light";
+      this.setState({ theme: t });
+      this.applyTheme(t);
+    }
+  }
+  applyTheme(t) {
+    const r = document.documentElement;
+    if (t === "dark") r.setAttribute("data-theme", "dark"); else r.removeAttribute("data-theme");
+  }
+  toggleTheme() {
+    const t = this.state.theme === "dark" ? "light" : "dark";
+    this.setState({ theme: t });
+    this.applyTheme(t);
+  }
+  componentWillUnmount() { window.removeEventListener("keydown", this._esc); }
+  lanePalette() {
+    // hue tokens resolve per theme; tint/wash are mixed against the panel surface so they follow the theme too
+    const mk = c => ({ color: c, tint: "color-mix(in srgb, " + c + " var(--tint-a), var(--surf))", wash: "color-mix(in srgb, " + c + " var(--wash-a), var(--surf))" });
+    return ["var(--lane1)", "var(--lane2)", "var(--lane3)", "var(--lane4)", "var(--lane5)", "var(--lane6)", "var(--lane7)"].map(mk);
+  }
+  laneSkin(id) {
+    const p = this.lanePalette();
+    if (id === "intake") return p[6];
+    const l = this.state.laneDefs.find(x => x.id === id);
+    return (l && p.find(x => x.color === l.color)) || p[2];
+  }
+  laneColor(id) { return this.laneSkin(id).color; }
+  laneTint(id) { return this.laneSkin(id).tint; }
+  laneWash(id) { return this.laneSkin(id).wash; }
+  lanesDef() {
+    const d = this.state.laneDefs;
+    if (this.props.internalFirst && d.length > 1) return [d[1], d[0]].concat(d.slice(2));
+    return d.slice();
+  }
+  addLane(afterId) {
+    this.setState(s => {
+      const used = s.laneDefs.map(l => l.color), pal = this.lanePalette().slice(0, 6);
+      const pick = pal.find(p => used.indexOf(p.color) < 0) || pal[s.laneDefs.length % pal.length];
+      let n = 1; while (s.laneDefs.some(l => l.id === "lane" + n)) n++;
+      const id = "lane" + n;
+      const def = { id, name: "New lane", hint: "", cols: ["Pending", "In Action", "Staged"], color: pick.color };
+      const at = afterId ? s.laneDefs.findIndex(l => l.id === afterId) : -1;
+      const laneDefs = s.laneDefs.slice();
+      laneDefs.splice(at < 0 ? laneDefs.length : at + 1, 0, def);
+      return { laneDefs, laneDraft: { id, value: "" } };
+    });
+  }
+  moveColumn(laneId, src, target) {
+    this.setState(s => ({
+      colOver: null,
+      laneDefs: s.laneDefs.map(l => {
+        if (l.id !== laneId) return l;
+        const i = l.cols.indexOf(src), j = l.cols.indexOf(target);
+        if (i < 0 || j < 0 || i === j) return l;
+        const cols = l.cols.slice();
+        cols.splice(i, 1);
+        cols.splice(cols.indexOf(target) + (i < j ? 1 : 0), 0, src);
+        return Object.assign({}, l, { cols });
+      }),
+    }));
+  }
+  allowDropRaw(e) { e.preventDefault(); e.dataTransfer.dropEffect = "move"; }
+  moveLane(src, target) {
+    this.setState(s => {
+      const d = s.laneDefs.slice(), i = d.findIndex(l => l.id === src), j = d.findIndex(l => l.id === target);
+      if (i < 0 || j < 0 || i === j) return { laneOver: null };
+      const [m] = d.splice(i, 1);
+      d.splice(d.findIndex(l => l.id === target) + (i < j ? 1 : 0), 0, m);
+      return { laneDefs: d, laneOver: null };
+    });
+  }
+  editOutcome(name) {
+    const o = this.state.outcomes.find(x => x.name === name);
+    if (!o) return;
+    this.set({ outEdit: { key: name, name: o.name, objective: o.objective || "", desc: o.desc || "", date: o.date || "" } });
+  }
+  saveOutcome(close) {
+    const d = this.state.outEdit;
+    if (!d) return this.set({ outEdit: null });
+    this.setState(s => {
+      const typed = String(d.name || "").trim();
+      const clash = !typed || s.outcomes.some(o => o.name === typed && o.name !== d.key);
+      const name = clash ? d.key : typed;
+      const outcomes = s.outcomes.map(o => o.name === d.key ? Object.assign({}, o, { name, objective: d.objective || "", desc: d.desc, date: d.date }) : o);
+      const rn = (list) => list.map(x => x === d.key ? name : x);
+      const tasks = name === d.key ? s.tasks : s.tasks.map(t => Object.assign({}, t, {
+        outcomes: rn(t.outcomes || []),
+        log: (t.log || []).map(e => Object.assign({}, e, { outcomes: rn(e.outcomes || []) })),
+      }));
+      return { outcomes, tasks, outEdit: close ? null : Object.assign({}, d, { key: name, name }) };
+    });
+  }
+  uniqueName(base, taken) {
+    let n = base, i = 2;
+    while (taken.indexOf(n) >= 0) { n = base + " " + i; i++; }
+    return n;
+  }
+  addObjective() {
+    const name = this.uniqueName("New objective", this.state.objectives.map(o => o.name));
+    this.setState(s => ({
+      objectives: s.objectives.concat([{ name, parent: "", measure: "", year: this.dObj(this.today()).getFullYear() }]),
+      tool: "objectives", panelOpen: true,
+      objEdit: { key: name, name, parent: "", measure: "", outs: [] },
+    }));
+  }
+  addOutcome() {
+    const name = this.uniqueName("New outcome", this.state.outcomes.map(o => o.name));
+    this.setState(s => ({
+      outcomes: s.outcomes.concat([{ name, objective: "", desc: "", date: "" }]),
+      tool: "outcomes", panelOpen: true,
+      outEdit: { key: name, name, objective: "", desc: "", date: "" },
+    }));
+  }
+  newOutcomeFor(objName) {
+    const name = this.uniqueName("New outcome", this.state.outcomes.map(o => o.name));
+    this.setState(st => ({
+      outcomes: st.outcomes.concat([{ name, objective: objName, desc: "", date: "" }]),
+      objEdit: st.objEdit ? Object.assign({}, st.objEdit, { outs: (st.objEdit.outs || []).concat([name]) }) : st.objEdit,
+    }));
+  }
+  editObjective(name) {
+    const o = this.state.objectives.find(x => x.name === name);
+    if (!o) return;
+    this.set({ objEdit: { key: name, name: o.name, parent: o.parent || "", measure: o.measure, outs: this.state.outcomes.filter(x => x.objective === name).map(x => x.name) } });
+  }
+  archiveObjective() {
+    const d = this.state.objEdit;
+    if (!d) return;
+    this.setState(s => {
+      const src = s.objectives.find(o => o.name === d.key);
+      const up = src ? src.parent || "" : "";
+      return {
+        objectives: s.objectives.map(o => o.name === d.key ? Object.assign({}, o, { archived: true })
+          : o.parent === d.key ? Object.assign({}, o, { parent: up }) : o),
+        objFilter: (() => { const f = Object.assign({}, s.objFilter); delete f[d.key]; return f; })(),
+        objEdit: null,
+      };
+    });
+  }
+  saveObjective(close) {
+    const d = this.state.objEdit;
+    if (!d) return this.set({ objEdit: null });
+    this.setState(s => {
+      const typed = String(d.name || "").trim();
+      const clash = !typed || s.objectives.some(o => o.name === typed && o.name !== d.key);
+      const name = clash ? d.key : typed;
+      const objectives = s.objectives.map(o => {
+        if (o.name === d.key) return Object.assign({}, o, { name, parent: d.parent || "", measure: d.measure });
+        if (o.parent === d.key) return Object.assign({}, o, { parent: name });
+        return o;
+      });
+      const renamed = name !== d.key;
+      const tasks = renamed ? s.tasks.map(t => (t.objectives || []).indexOf(d.key) < 0 ? t : Object.assign({}, t, { objectives: t.objectives.map(x => x === d.key ? name : x) })) : s.tasks;
+      const outs = d.outs || [];
+      const outcomes = s.outcomes.map(o => {
+        if (outs.indexOf(o.name) >= 0) return o.objective === name ? o : Object.assign({}, o, { objective: name });
+        if (o.objective === d.key) return Object.assign({}, o, { objective: "" });
+        return o;
+      });
+      const objFilter = Object.assign({}, s.objFilter);
+      if (objFilter[d.key] && name !== d.key) { delete objFilter[d.key]; objFilter[name] = true; }
+      return { objectives, tasks, outcomes, objFilter, objEdit: close ? null : Object.assign({}, d, { key: name, name }) };
+    });
+  }
+  setLaneColor(id, color) {
+    this.setState(s => ({ laneDefs: s.laneDefs.map(l => l.id === id ? Object.assign({}, l, { color }) : l) }));
+  }
+  commitLane() {
+    const d = this.state.laneDraft;
+    if (!d) return;
+    this.setState(s => {
+      const next = String(d.value || "").trim();
+      return { laneDraft: null, laneDefs: next ? s.laneDefs.map(l => l.id === d.id ? Object.assign({}, l, { name: next }) : l) : s.laneDefs };
+    });
+  }
+  deleteLane(id, target) {
+    this.setState(s => {
+      const src = s.laneDefs.find(l => l.id === id);
+      if (!src) return { laneKill: null, killTarget: null };
+      const tgt = target && target !== "intake" ? s.laneDefs.find(l => l.id === target) : null;
+      const COLW = this.colW() + 12, PITCH = Math.round(this.colW() * 0.6), GAP = 12;
+      // free-lay into intake: four columns, each stacked below whatever already sits there
+      const heads = s.tasks.filter(t => t.lane === "intake" && !t.archived)
+        .reduce((a, t) => { const c = Math.max(0, Math.min(3, Math.round(((t.x || 0) - 16) / COLW))); a[c] = Math.max(a[c], (t.y || 0) + PITCH); return a; }, [14, 14, 14, 14]);
+      let placed = 0;
+      const tasks = s.tasks.map(t => {
+        if (t.lane !== id) return t;
+        if (tgt) return Object.assign({}, t, { lane: tgt.id });
+        const c = placed++ % 4, y = heads[c];
+        heads[c] = y + PITCH;
+        return Object.assign({}, t, { lane: "intake", col: "", x: 16 + c * COLW, y });
+      });
+      const needed = placed ? Math.max.apply(null, heads) - PITCH + GAP + 132 : 0;
+      const merged = tgt ? tgt.cols.concat(src.cols.filter(c => tgt.cols.indexOf(c) < 0)) : null;
+      const cols = {}; Object.keys(s.collapsedCols).forEach(k => { if (k.split(":")[0] !== id) cols[k] = true; });
+      const lanesC = Object.assign({}, s.collapsedLanes); delete lanesC[id];
+      const patch = { laneDefs: s.laneDefs.filter(l => l.id !== id).map(l => tgt && l.id === tgt.id ? Object.assign({}, l, { cols: merged }) : l), tasks, collapsedCols: cols, collapsedLanes: lanesC, laneKill: null, killTarget: null, laneDraft: null };
+      if (needed) patch.intakeH = Math.max(s.intakeH ?? (this.props.intakeHeight ?? 190), needed);
+      return patch;
+    });
+  }
+  prioMeta(p) { return { P1: { color: "var(--danger)", tint: "var(--danger-soft)", title: "P1 — highest" }, P2: { color: "var(--warn)", tint: "var(--warn-soft)", title: "P2 — medium" }, P3: { color: "var(--ink3)", tint: "var(--surf3)", title: "P3 — low" } }[p] || { color: "var(--ink3)", tint: "var(--surf3)", title: p }; }
+  prioChip(p, active) {
+    const m = this.prioMeta(p);
+    return { name: p, title: m.title, isP1: p === "P1", isP2: p === "P2", isP3: p === "P3", border: active ? m.color : "var(--line)", bg: active ? m.tint : "var(--surf)", color: active ? m.color : "var(--ink4)" };
+  }
+  labelHue(name) {
+    const i = this.state.allLabels.indexOf(name);
+    if (i < 0) { let h = 0; for (let j = 0; j < name.length; j++) h = (h * 31 + name.charCodeAt(j)) % 360; return h; }
+    return Math.round((25 + i * 137.5) % 360);
+  }
+  labelStyle(name, active) {
+    const h = this.labelHue(name), dark = this.state.theme === "dark";
+    if (dark) return active
+      ? { border: "oklch(0.62 0.13 " + h + ")", bg: "oklch(0.62 0.13 " + h + ")", color: "oklch(0.18 0.03 " + h + ")" }
+      : { border: "oklch(0.40 0.06 " + h + ")", bg: "oklch(0.27 0.04 " + h + ")", color: "oklch(0.82 0.09 " + h + ")" };
+    return active
+      ? { border: "oklch(0.55 0.13 " + h + ")", bg: "oklch(0.55 0.13 " + h + ")", color: "var(--surf)" }
+      : { border: "oklch(0.86 0.06 " + h + ")", bg: "oklch(0.965 0.025 " + h + ")", color: "oklch(0.45 0.12 " + h + ")" };
+  }
+  set(patch) { this.setState(patch); }
+  updTask(key, patch) { this.setState(s => ({ tasks: s.tasks.map(t => t.key === key ? Object.assign({}, t, typeof patch === "function" ? patch(t) : patch) : t) })); }
+  toggleKey(field, key) { this.setState(s => { const o = Object.assign({}, s[field]); o[key] ? delete o[key] : o[key] = true; return { [field]: o }; }); }
+  toggleIn(key, field, name) { this.updTask(key, t => ({ [field]: t[field].includes(name) ? t[field].filter(x => x !== name) : t[field].concat([name]) })); }
+  contribs(tasks) { return tasks.reduce((a, t) => a + t.log.filter(e => (e.outcomes || []).length > 0).length, 0); }
+  outContribs(name) { return this.state.tasks.filter(t => !t.archived).reduce((a, t) => a + t.log.filter(e => (e.outcomes || []).includes(name)).length, 0); }
+  pasteImages(key, e) {
+    const items = Array.from((e.clipboardData && e.clipboardData.items) || []);
+    const files = items.filter(i => i.kind === "file" && i.type.indexOf("image/") === 0).map(i => i.getAsFile()).filter(Boolean);
+    if (!files.length) return;
+    e.preventDefault();
+    const ta = e.target, at = ta.selectionStart;
+    files.forEach(f => {
+      const r = new FileReader();
+      r.onload = () => {
+        const id = "im" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        const name = f.name || "pasted image";
+        const tag = "![" + name + "](" + id + ")";
+        this.setState(st => ({
+          tasks: st.tasks.map(t => {
+            if (t.key !== key) return t;
+            const d = t.desc || "", cut = Math.min(at, d.length);
+            const before = d.slice(0, cut), after = d.slice(cut);
+            const sep = before && !before.endsWith("\n") ? "\n\n" : "";
+            return Object.assign({}, t, {
+              images: (t.images || []).concat([{ id, name, src: r.result }]),
+              desc: before + sep + tag + (after ? "\n" + after : ""),
+            });
+          }),
+        }));
+      };
+      r.readAsDataURL(f);
+    });
+  }
+  removeImage(key, id) {
+    this.setState(st => ({
+      tasks: st.tasks.map(t => t.key !== key ? t : Object.assign({}, t, {
+        images: (t.images || []).filter(im => im.id !== id),
+        desc: String(t.desc || "").replace(new RegExp("!\\[[^\\]]*\\]\\(" + id + "\\)\\n?", "g"), ""),
+      })),
+    }));
+  }
+  fmtDate(iso) {
+    if (!iso) return "";
+    const p = String(iso).split("-");
+    if (p.length !== 3) return iso;
+    const m = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][Number(p[1]) - 1] || "";
+    return m + " " + Number(p[2]) + (iso > "2026-09-05" ? " (target)" : "");
+  }
+  LOG_MONTHS() { return ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; }
+  today() { return "2026-09-08"; }
+  dObj(iso) { return new Date(iso + "T00:00:00"); }
+  isoStr(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  addDays(iso, n) { const d = this.dObj(iso); d.setDate(d.getDate() + n); return this.isoStr(d); }
+  weekStart(iso) { const d = this.dObj(iso); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return this.isoStr(d); }
+  isoOf(e) {
+    if (e.iso) return e.iso;
+    const m = String(e.date || "").match(/^([A-Za-z]{3})\s+(\d{1,2})$/);
+    const mi = m ? this.LOG_MONTHS().indexOf(m[1]) : -1;
+    return mi < 0 ? "" : "2026-" + String(mi + 1).padStart(2, "0") + "-" + String(Number(m[2])).padStart(2, "0");
+  }
+  allLog() {
+    const out = [];
+    this.state.tasks.forEach(t => (t.log || []).forEach((e, i) => {
+      const iso = this.isoOf(e);
+      if (iso) out.push({ iso, type: e.type, hours: parseFloat(e.hours) || 0, note: e.note || "", outcomes: e.outcomes || [], taskKey: t.key, taskTitle: t.title, id: t.key + ":" + i });
+    }));
+    return out;
+  }
+  logRange(scope, anchor) {
+    if (scope === "Day") return { from: anchor, to: anchor };
+    if (scope === "Week") { const f = this.weekStart(anchor); return { from: f, to: this.addDays(f, 6) }; }
+    const d = this.dObj(anchor);
+    if (scope === "Month") return { from: this.isoStr(new Date(d.getFullYear(), d.getMonth(), 1)), to: this.isoStr(new Date(d.getFullYear(), d.getMonth() + 1, 0)) };
+    return { from: d.getFullYear() + "-01-01", to: d.getFullYear() + "-12-31" };
+  }
+  fmtShort(iso) { const d = this.dObj(iso); return this.LOG_MONTHS()[d.getMonth()] + " " + d.getDate(); }
+  fmtWeekday(iso) { const d = this.dObj(iso); return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][d.getDay()] + ", " + this.fmtShort(iso); }
+  holdProps(id, fn) {
+    const on = this.state.hold === id;
+    return {
+      holdW: on ? 100 : 0, holdMs: on ? 2000 : 140,
+      holdBorder: on ? "var(--danger)" : "var(--line)", holdColor: on ? "var(--danger)" : "var(--ink2)",
+      onHoldStart: (e) => { e.preventDefault(); clearTimeout(this._hold); this.set({ hold: id }); this._hold = setTimeout(() => { this.set({ hold: null }); fn(); }, 2000); },
+      onHoldEnd: () => { clearTimeout(this._hold); if (this.state.hold) this.set({ hold: null }); },
+    };
+  }
+  toolChip(id) {
+    const on = this.state.tool === id && this.state.panelOpen;
+    return {
+      bg: on ? "var(--ink-a06)" : "transparent", color: on ? "var(--ink)" : "var(--ink3)",
+      mark: on ? "inset 2px 0 0 var(--accent)" : "none",
+      onPick: () => this.setState(s => ({ tool: id, panelOpen: s.tool === id ? !s.panelOpen : true })),
+    };
+  }
+  colW() { return this.props.colWidth ?? 360; }
+  taskPhase(t) {
+    const def = this.state.laneDefs.find(l => l.id === t.lane);
+    if (!def || !t.col) return "pending";
+    const i = def.cols.indexOf(t.col);
+    if (i < 0) return "pending";
+    if (def.cols.length > 1 && i === def.cols.length - 1) return "staged";
+    return i > 0 ? "action" : "pending";
+  }
+  horizonFor(level) { return ["Long-term", "Month", "Week"][Math.min(level, 2)]; }
+  objDepth(name) { let n = 0, cur = this.state.objectives.find(o => o.name === name); while (cur && cur.parent) { n++; cur = this.state.objectives.find(o => o.name === cur.parent); } return n; }
+  objChildren(name) { const out = [name]; this.state.objectives.forEach(o => { if (o.parent === name) out.push.apply(out, this.objChildren(o.name)); }); return out; }
+  md(src, images) {
+    const map = {};
+    (images || []).forEach(im => { map[im.id] = im; });
+    const esc = (x) => String(x).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const inline = (x) => esc(x)
+      .replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, (m, alt, ref) => {
+        const im = map[ref];
+        if (!im) return "";
+        return '<img src="' + im.src + '" alt="' + alt + '" style="display:block;max-width:100%;border:1px solid var(--line);border-radius:4px;margin:6px 0">';
+      })
+      .replace(/`([^`]+)`/g, '<code style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;background:var(--surf3);padding:1px 4px;border-radius:2px">$1</code>')
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>")
+      .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2" target="_blank" style="color:var(--accent);text-decoration:underline">$1</a>')
+      .replace(/(^|\s)(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank" style="color:var(--accent);text-decoration:underline">$2</a>');
+    const out = [], lines = String(src || "").split("\n");
+    let list = null, para = [];
+    const flushPara = () => { if (para.length) { out.push('<p style="margin:0 0 6px;font:inherit;color:inherit">' + inline(para.join(" ")) + "</p>"); para = []; } };
+    const flushList = () => { if (list) { out.push("<" + list.tag + ' style="margin:0 0 8px;padding-left:18px;font:inherit;color:inherit">' + list.items.map(i => '<li style="margin:2px 0;font:inherit;color:inherit">' + inline(i) + "</li>").join("") + "</" + list.tag + ">"); list = null; } };
+    lines.forEach(raw => {
+      const line = raw.trim();
+      if (!line) { flushPara(); flushList(); return; }
+      const h = line.match(/^(#{1,4})\s+(.*)$/);
+      const ul = line.match(/^[-*+]\s+(.*)$/);
+      const ol = line.match(/^\d+[.)]\s+(.*)$/);
+      if (h) { flushPara(); flushList(); const sz = [15, 13, 12, 11][h[1].length - 1]; out.push('<div style="font-size:' + sz + 'px;font-weight:700;margin:6px 0 4px;color:inherit">' + inline(h[2]) + "</div>"); }
+      else if (ul) { flushPara(); if (!list || list.tag !== "ul") { flushList(); list = { tag: "ul", items: [] }; } list.items.push(ul[1]); }
+      else if (ol) { flushPara(); if (!list || list.tag !== "ol") { flushList(); list = { tag: "ol", items: [] }; } list.items.push(ol[1]); }
+      else { flushList(); para.push(line); }
+    });
+    flushPara(); flushList();
+    return out.join("");
+  }
+  addLabel(name, applyToKey) {
+    const n = String(name || "").trim();
+    if (!n) return;
+    this.setState(s => ({ allLabels: s.allLabels.includes(n) ? s.allLabels : s.allLabels.concat([n]), labelDraft: "" }));
+    if (applyToKey) this.updTask(applyToKey, t => ({ labels: t.labels.includes(n) ? t.labels : t.labels.concat([n]) }));
+  }
+  renameLabel(i, value) {
+    this.setState(s => {
+      const old = s.allLabels[i], next = s.allLabels.slice();
+      next[i] = value;
+      const filter = {}; Object.keys(s.labelFilter).forEach(k => filter[k === old ? value : k] = true);
+      return { allLabels: next, labelFilter: filter, tasks: s.tasks.map(t => t.labels.includes(old) ? Object.assign({}, t, { labels: t.labels.map(l => l === old ? value : l) }) : t) };
+    });
+  }
+  removeLabel(i) {
+    this.setState(s => {
+      const old = s.allLabels[i], filter = Object.assign({}, s.labelFilter); delete filter[old];
+      return { allLabels: s.allLabels.filter((_, j) => j !== i), labelFilter: filter, tasks: s.tasks.map(t => t.labels.includes(old) ? Object.assign({}, t, { labels: t.labels.filter(l => l !== old) }) : t) };
+    });
+  }
+  freeColName(lane) {
+    const base = "New column", used = lane.cols;
+    if (!used.includes(base)) return base;
+    let n = 2; while (used.includes(base + " " + n)) n++;
+    return base + " " + n;
+  }
+  addColumn(laneId, moveKey) {
+    this.setState(s => {
+      const lane = s.laneDefs.find(l => l.id === laneId); if (!lane) return {};
+      const name = this.freeColName(lane), idx = lane.cols.length;
+      return {
+        laneDefs: s.laneDefs.map(l => l.id === laneId ? Object.assign({}, l, { cols: l.cols.concat([name]) }) : l),
+        colDraft: moveKey ? null : { lane: laneId, i: idx, value: "" },
+        tasks: moveKey ? s.tasks.map(t => t.key === moveKey ? Object.assign({}, t, { lane: laneId, col: name }) : t) : s.tasks,
+      };
+    });
+  }
+  commitColumn() {
+    const d = this.state.colDraft;
+    if (!d) return;
+    this.setState(s => {
+      const lane = s.laneDefs.find(l => l.id === d.lane); if (!lane) return { colDraft: null };
+      const old = lane.cols[d.i], next = String(d.value || "").trim() || old;
+      if (next === old) return { colDraft: null };
+      const cols = lane.cols.slice(); cols[d.i] = next;
+      const collapsed = {}; Object.keys(s.collapsedCols).forEach(k => collapsed[k === d.lane + ":" + old ? d.lane + ":" + next : k] = true);
+      return {
+        colDraft: null, collapsedCols: collapsed,
+        laneDefs: s.laneDefs.map(l => l.id === d.lane ? Object.assign({}, l, { cols }) : l),
+        tasks: s.tasks.map(t => t.lane === d.lane && t.col === old ? Object.assign({}, t, { col: next }) : t),
+      };
+    });
+  }
+  removeColumn(laneId, i) { this.setState(s => ({ laneDefs: s.laneDefs.map(l => l.id === laneId ? Object.assign({}, l, { cols: l.cols.filter((_, j) => j !== i) }) : l), colDraft: null })); }
+  matches(t) {
+    const s = this.state, q = s.search.trim().toLowerCase();
+    if (t.archived) return false;
+    if (q) {
+      const hay = [t.title, t.desc, t.obstacles, t.log.map(e => e.note + " " + e.artefacts.join(" ") + " " + e.values.join(" ") + " " + e.people.join(" ")).join(" ")].join(" ").toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    const lf = Object.keys(s.labelFilter); if (lf.length && !lf.some(l => t.labels.includes(l))) return false;
+    const pf = Object.keys(s.prioFilter); if (pf.length && !pf.includes(t.prio)) return false;
+    if (s.obstacleFilter && !t.obstacles) return false;
+    if (s.sevFilter && t.sev !== "High") return false;
+    const of = Object.keys(s.objFilter || {});
+    if (of.length) { const fam = of.reduce((a, n) => a.concat(this.objChildren(n)), []); if (!t.objectives.some(o => fam.includes(o))) return false; }
+    return true;
+  }
+  parse(text) {
+    const artefacts = [], values = [], notes = [];
+    (text || "").split("\n").forEach(line => {
+      const t = line.trim();
+      if (t.charAt(0) === "!") { if (t.length > 1) artefacts.push(t.slice(1).trim()); }
+      else if (t.charAt(0) === "+") { if (t.length > 1) values.push(t.slice(1).trim()); }
+      else if (t) notes.push(t);
+    });
+    const people = [];
+    (String(text || "").match(/@[A-Za-z][A-Za-z0-9._-]*/g) || []).forEach(m => { const n = m.slice(1); if (people.indexOf(n) < 0) people.push(n); });
+    return { note: notes.join("\n"), artefacts, values, people };
+  }
+  cardView(t) {
+    const pm = this.prioMeta(t.prio);
+    const sev = { High: { glyph: "▲", title: "Severity high", color: "var(--danger)" } }[t.sev] || { glyph: "", title: "", color: "var(--ink3)" };
+    const mode = this.props.cardAccent || "Lane";
+    const def = this.state.laneDefs.find(l => l.id === t.lane);
+    const done = !!def && def.cols[def.cols.length - 1] === t.col;
+    const overdue = !!t.dateline && !done && t.dateline < "2026-09-05";
+    const bg = t.obstacles ? "var(--danger-soft)" : mode === "Lane" ? this.laneWash(t.lane) : mode === "Priority" && t.prio === "P1" ? "var(--surf2)" : "var(--surf)";
+    return {
+      edge: "inset 3px 0 0 " + (overdue ? "var(--danger)" : t.dateline ? "var(--ink3)" : "var(--line2)"), overdue,
+      title: t.title, prio: pm.title, prioColor: pm.color, showPrio: t.prio !== "P2", isP1: t.prio === "P1", isP3: t.prio === "P3", x: t.x, y: t.y, bg,
+      labels: t.labels.map(name => Object.assign({ name }, this.labelStyle(name, false))), sevGlyph: sev.glyph, sevTitle: sev.title, sevColor: sev.color, hasObstacle: !!t.obstacles,
+      hasTaxonomy: t.labels.length > 0,
+      objTags: t.objectives.map(name => ({ name })), outTags: t.outcomes.map(name => ({ name })),
+      hasLinks: t.objectives.length > 0 || t.outcomes.length > 0,
+      onOpen: () => this.set({ modalKey: t.key, descPreview: !!t.desc, obsPreview: !!t.obstacles, draft: { text: "", outcomes: [], hours: "" } }),
+      onDragStart: (e) => { const r = e.currentTarget.getBoundingClientRect(); this.state.drag = { key: t.key, ox: e.clientX - r.left, oy: e.clientY - r.top }; e.dataTransfer.setData("text/plain", t.key); e.dataTransfer.effectAllowed = "move"; },
+    };
+  }
+  dropTo(lane, col) { return (e) => { e.preventDefault(); const d = this.state.drag; if (!d) return; this.updTask(d.key, { lane, col }); this.state.drag = null; }; }
+  addTask(lane, col, title, x = 0, y = 0) {
+    this.setState(s => { const key = "t" + s.nextId; return { nextId: s.nextId + 1, modalKey: title ? s.modalKey : key, moveLane: title ? s.moveLane : lane, descPreview: title ? s.descPreview : false, draft: title ? s.draft : { text: "", outcomes: [] }, tasks: s.tasks.concat([{ key, lane, col, title: title || "New task", desc: "", obstacles: "", labels: [], prio: "P2", sev: "Low", dateline: "", objectives: [], outcomes: [], log: [], archived: false, x, y }]) }; });
+  }
+  chip(name, active) { return { name, border: active ? "var(--ink)" : "var(--line)", bg: active ? "var(--ink)" : "var(--surf)", color: active ? "var(--surf)" : "var(--ink2)" }; }
+  renderVals() {
+    const s = this.state;
+    s.tasks.forEach((t, i) => {
+      if (!t.key) t.key = "t" + (i + 1);
+      if (!t.labels) t.labels = [];
+      if (!t.objectives) t.objectives = [];
+      if (!t.outcomes) t.outcomes = [];
+      if (!t.log) t.log = [];
+      t.log.forEach(e => { if (!e.artefacts) e.artefacts = []; if (!e.values) e.values = []; if (!e.people) e.people = []; if (!e.outcomes) e.outcomes = []; });
+    });
+    const live = s.tasks.filter(t => !t.archived), visible = live.filter(t => this.matches(t));
+    const pct = (n, d) => d ? Math.round(n / d * 100) : 0;
+    const objStats = (o) => {
+      const fam = this.objChildren(o.name), ts = live.filter(t => t.objectives.some(x => fam.includes(x)));
+      const archivedCount = s.tasks.filter(t => t.archived && t.objectives.some(x => fam.includes(x))).length;
+      const staged = ts.filter(t => this.taskPhase(t) === "staged").length, action = ts.filter(t => this.taskPhase(t) === "action").length, pending = ts.length - staged - action;
+      const outs = s.outcomes.filter(x => fam.includes(x.objective));
+      const ents = this.allLog().filter(e => { const t = s.tasks.find(x => x.key === e.taskKey); return t && (t.objectives || []).some(x => fam.includes(x)); });
+      const wk0 = this.weekStart(this.today()), heat = [];
+      for (let i = 25; i >= 0; i--) {
+        const from = this.addDays(wk0, -7 * i), to = this.addDays(from, 6);
+        const n = ents.filter(e => e.iso >= from && e.iso <= to).length;
+        heat.push({
+          h: 10, title: this.fmtShort(from) + " – " + this.fmtShort(to) + ": " + n + (n === 1 ? " entry" : " entries"),
+          bg: n === 0 ? "var(--line)" : "color-mix(in srgb, var(--accent) " + Math.min(100, 30 + n * 22) + "%, var(--surf))",
+        });
+      }
+      return { total: ts.length, archivedCount, heat, staged, action, pending, pct: pct(staged, ts.length), wStaged: pct(staged, ts.length), wAction: pct(action, ts.length), wPending: pct(pending, ts.length), contribs: this.contribs(ts), outcomesCount: outs.length, outcomes: outs.map(x => ({ name: x.name })), hasOutcomes: outs.length > 0 };
+    };
+    const tree = []; const walk = (parent, level, rootYear) => { s.objectives.filter(o => !o.archived && o.parent === parent).forEach(o => { const yr = level === 0 ? (o.year || 2026) : rootYear; tree.push(Object.assign({ name: o.name, level, year: yr, horizon: this.horizonFor(level), measure: o.measure, indent: 24 + level * 18, weight: level === 0 ? 700 : level === 1 ? 600 : 400, size: level === 0 ? 14 : 13, mark: s.objEdit && s.objEdit.key === o.name ? "var(--ink)" : "transparent", bg: s.objEdit && s.objEdit.key === o.name ? "var(--surf3)" : "var(--surf)", onEdit: () => this.editObjective(o.name) }, objStats(o))); walk(o.name, level + 1, yr); }); };
+    walk("", 0, 2026);
+    const objYears = [];
+    tree.forEach(row => {
+      const y = String(row.year || 2026);
+      let g = objYears.find(x => x.year === y);
+      if (!g) { g = { year: y, rows: [] }; objYears.push(g); }
+      g.rows.push(row);
+    });
+    objYears.sort((a, b) => b.year.localeCompare(a.year));
+    objYears.forEach(g => {
+      const closed = !!s.collapsedYears[g.year];
+      const cards = g.rows.reduce((a, r) => a + r.total, 0);
+      g.open = !closed; g.chevron = closed ? "▶" : "▼";
+      g.summary = g.rows.length + (g.rows.length === 1 ? " objective · " : " objectives · ") + cards + (cards === 1 ? " card" : " cards");
+      g.onToggle = () => this.toggleKey("collapsedYears", g.year);
+    });
+    const intakeCards = visible.filter(t => t.lane === "intake").map(t => this.cardView(t));
+    const intakeH = s.intakeH ?? (this.props.intakeHeight ?? 190);
+    const laneList = this.lanesDef();
+    const lanes = laneList.map((l, li) => {
+      const laneTasks = visible.filter(t => t.lane === l.id), open = !s.collapsedLanes[l.id], color = this.laneColor(l.id);
+      const renamingLane = !!s.laneDraft && s.laneDraft.id === l.id;
+      const dist = l.cols.map((c, i) => ({ w: pct(laneTasks.filter(t => t.col === c).length, laneTasks.length), color: i === l.cols.length - 1 ? "var(--line)" : i === 0 ? "var(--ink)" : color }));
+      return {
+        name: l.name, hint: l.hint, count: laneTasks.length, open, chevron: open ? "▼" : "▶", color, tint: this.laneTint(l.id), contribs: this.contribs(laneTasks), dist,
+        onToggle: () => this.toggleKey("collapsedLanes", l.id),
+        onAddCol: () => this.addColumn(l.id),
+        onAddBelow: () => this.addLane(l.id),
+        showAdd: laneList.length < 2 ? li === 0 : li === laneList.length - 2,
+        draggable: !renamingLane,
+        headShadow: s.laneOver === l.id ? "inset 0 3px 0 var(--ink)" : "none",
+        onLaneDragStart: (e) => { this._laneDrag = l.id; e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/lane", l.id); },
+        onLaneDragOver: (e) => {
+          const d = this._laneDrag;
+          if (!d || d === l.id) return;
+          e.preventDefault(); e.stopPropagation(); e.dataTransfer.dropEffect = "move";
+          if (this.state.laneOver !== l.id) this.set({ laneOver: l.id });
+        },
+        onLaneDrop: (e) => { const d = this._laneDrag; if (!d) return; e.preventDefault(); e.stopPropagation(); this._laneDrag = null; this.moveLane(d, l.id); },
+        onLaneDragEnd: () => { this._laneDrag = null; if (this.state.laneOver) this.set({ laneOver: null }); },
+        swatches: this.lanePalette().map((p, i) => ({
+          color: p.color, title: "Lane colour " + (i + 1), ring: p.color === l.color ? "var(--ink)" : "var(--surf)",
+          onPick: (e) => { e.preventDefault(); this.setLaneColor(l.id, p.color); },
+        })),
+        renaming: renamingLane, notRenaming: !renamingLane, draftValue: renamingLane ? s.laneDraft.value : "",
+        onRename: (e) => { e.stopPropagation(); this.set({ laneDraft: { id: l.id, value: l.name } }); },
+        onDraftChange: (e) => this.set({ laneDraft: { id: l.id, value: e.target.value } }),
+        onDraftKey: (e) => { if (e.key === "Enter") this.commitLane(); if (e.key === "Escape") this.set({ laneDraft: null }); },
+        onCommitName: () => this.commitLane(),
+        onDelete: (e) => {
+          e.stopPropagation();
+          if (live.filter(t => t.lane === l.id).length === 0) { this.deleteLane(l.id, null); return; }
+          const other = this.lanesDef().find(x => x.id !== l.id);
+          this.set({ laneKill: l.id, killTarget: other ? other.id : "intake", laneDraft: null });
+        },
+        cols: l.cols.map((c, i) => {
+          const key = l.id + ":" + c, closed = !!s.collapsedCols[key], count = laneTasks.filter(t => t.col === c).length;
+          const renaming = !!s.colDraft && s.colDraft.lane === l.id && s.colDraft.i === i;
+          return {
+            name: c, count, open: !closed, closed, cards: laneTasks.filter(t => t.col === c).map(t => this.cardView(t)),
+            renaming, notRenaming: !renaming, draftValue: renaming ? s.colDraft.value : "",
+            removable: live.filter(t => t.lane === l.id && t.col === c).length === 0 && l.cols.length > 1 && !renaming,
+            onRename: (e) => { e.stopPropagation(); this.set({ colDraft: { lane: l.id, i, value: c } }); },
+            onDraftChange: (e) => this.set({ colDraft: { lane: l.id, i, value: e.target.value } }),
+            onDraftKey: (e) => { if (e.key === "Enter") this.commitColumn(); if (e.key === "Escape") this.set({ colDraft: null }); },
+            onCommit: () => this.commitColumn(),
+            onRemove: (e) => { e.stopPropagation(); this.removeColumn(l.id, i); },
+            onToggle: () => this.toggleKey("collapsedCols", key),
+            onDrop: this.dropTo(l.id, c),
+            chevron: closed ? "▶" : "▼",
+            draggable: !renaming,
+            headShadow: s.colOver === key ? "inset 3px 0 0 var(--ink)" : "none",
+            onColDragStart: (e) => { e.stopPropagation(); this._colDrag = { lane: l.id, name: c }; e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/column", c); },
+            onColDragOver: (e) => {
+              const d = this._colDrag;
+              if (!d || d.lane !== l.id || d.name === c) return;
+              e.preventDefault(); e.stopPropagation(); e.dataTransfer.dropEffect = "move";
+              if (this.state.colOver !== key) this.set({ colOver: key });
+            },
+            onColDrop: (e) => { const d = this._colDrag; if (!d || d.lane !== l.id) return; e.preventDefault(); e.stopPropagation(); this._colDrag = null; this.moveColumn(l.id, d.name, c); },
+            onColDragOverAny: (e) => {
+              const d = this._colDrag;
+              if (d && d.lane === l.id && d.name !== c) { e.preventDefault(); e.stopPropagation(); e.dataTransfer.dropEffect = "move"; if (this.state.colOver !== key) this.set({ colOver: key }); return; }
+              this.allowDropRaw(e);
+            },
+            onColDropAny: (e) => {
+              const d = this._colDrag;
+              if (d && d.lane === l.id) { e.preventDefault(); e.stopPropagation(); this._colDrag = null; this.moveColumn(l.id, d.name, c); return; }
+              this.dropTo(l.id, c)(e);
+            },
+            onColDragEnd: () => { this._colDrag = null; if (this.state.colOver) this.set({ colOver: null }); },
+            onDblAdd: (e) => { e.stopPropagation(); this.addTask(l.id, c, ""); },
+          };
+        }),
+      };
+    });
+    const m = s.tasks.find(t => t.key === s.modalKey);
+    const setField = (f) => (e) => this.updTask(m.key, { [f]: e.target.value });
+    const laneName = (id) => { const L = this.lanesDef().find(l => l.id === id); return L ? L.name.split(" — ")[0] : "Intake"; };
+    let modal = null;
+    if (m) {
+      const parsed = this.parse(s.draft.text);
+      const objRows = []; const walk2 = (parent, level) => { s.objectives.filter(o => !o.archived && o.parent === parent).forEach(o => { const on = m.objectives.includes(o.name); objRows.push({ name: o.name, horizon: this.horizonFor(level), indent: 10 + level * 16, weight: level === 0 ? 600 : 400, bg: on ? "var(--surf2)" : "var(--surf)", boxBorder: on ? "var(--ink)" : "var(--line)", boxBg: on ? "var(--ink)" : "var(--surf)", onToggle: () => this.toggleIn(m.key, "objectives", o.name) }); walk2(o.name, level + 1); }); };
+      walk2("", 0);
+      const draftOuts = (s.draft.outcomes || []).filter(n => m.outcomes.includes(n));
+      modal = {
+        title: m.title, desc: m.desc, obstacles: m.obstacles, dateline: m.dateline,
+        laneName: laneName(m.lane),
+        stateSegs: (m.lane === "intake" ? [""] : ((this.lanesDef().find(l => l.id === m.lane) || { cols: [] }).cols)).map(c => {
+          const on = m.col === c;
+          return { name: c === "" ? "Intake" : c, bg: on ? "var(--ink)" : "transparent", color: on ? "var(--surf)" : "var(--ink2)", onPick: () => this.updTask(m.key, { col: c }) };
+        }),
+        writing: !s.descPreview, previewing: !!s.descPreview,
+        obsWriting: !s.obsPreview, obsPreviewing: !!s.obsPreview,
+        obsWriteChip: this.chip("Write", !s.obsPreview), obsPreviewChip: this.chip("Preview", !!s.obsPreview),
+        onObsWrite: () => this.set({ obsPreview: false }), onObsPreview: () => this.set({ obsPreview: true }),
+        obsHtml: React.createElement("div", { dangerouslySetInnerHTML: { __html: m.obstacles ? this.md(m.obstacles) : '<span style="color:var(--ink3)">Nothing blocking.</span>' } }),
+        writeChip: this.chip("Write", !s.descPreview), previewChip: this.chip("Preview", !!s.descPreview),
+        onWrite: () => this.set({ descPreview: false }), onPreview: () => this.set({ descPreview: true }),
+        descHtml: React.createElement("div", { dangerouslySetInnerHTML: { __html: m.desc ? this.md(m.desc, m.images) : '<span style="color:var(--ink3)">Nothing yet.</span>' } }),
+        hasImages: (m.images || []).length > 0,
+        images: (m.images || []).map(im => ({ id: im.id, name: im.name, src: im.src, bg: 'url("' + im.src + '")', onRemove: () => this.removeImage(m.key, im.id) })),
+        onDescPaste: (e) => this.pasteImages(m.key, e),
+        entryCount: m.log.length, contribCount: this.contribs([m]), logEmpty: m.log.length === 0, draft: s.draft,
+        parsed: { artefacts: parsed.artefacts.map(name => ({ name })), values: parsed.values.map(name => ({ name })), people: parsed.people.map(name => ({ name })) },
+        draftOutChips: m.outcomes.map(n => Object.assign(this.chip(n, draftOuts.includes(n)), { onToggle: () => this.set({ draft: Object.assign({}, s.draft, { outcomes: draftOuts.includes(n) ? draftOuts.filter(x => x !== n) : draftOuts.concat([n]) }) }) })),
+        noDraftOut: m.outcomes.length === 0,
+        log: m.log.map(e => ({ date: e.date, type: e.type, hours: e.hours ? e.hours + "h" : "", isCall: e.type === "Call", isMeeting: e.type === "Meeting", isMulti: e.type === "Multitasking", isFocus: e.type !== "Call" && e.type !== "Meeting" && e.type !== "Multitasking", noteHtml: React.createElement("div", { dangerouslySetInnerHTML: { __html: this.md(e.note) } }), artefacts: e.artefacts.map(name => ({ name })), values: e.values.map(name => ({ name })), people: e.people.map(name => ({ name })), outcomes: (e.outcomes || []).map(name => ({ name })) })),
+        prioThumb: m.prio === "P1" ? "0%" : m.prio === "P2" ? "100%" : "200%",
+        sevThumb: m.sev === "Low" ? "0%" : m.sev === "Medium" ? "100%" : "200%",
+        prioChips: ["P1", "P2", "P3"].map(n => Object.assign(this.prioChip(n, m.prio === n), { color: m.prio === n ? "var(--surf)" : "var(--ink2)", onPick: () => this.updTask(m.key, { prio: n }) })),
+        sevChips: [{ n: "Low", g: "▼" }, { n: "Medium", g: "▬" }, { n: "High", g: "▲" }].map(o => ({ name: o.n, title: "Severity: " + o.n, glyph: o.g, color: m.sev === o.n ? "var(--surf)" : "var(--ink2)", onPick: () => this.updTask(m.key, { sev: o.n }) })),
+        labelToggles: s.allLabels.map(n => Object.assign({ name: n }, this.labelStyle(n, m.labels.includes(n)), { onToggle: () => this.toggleIn(m.key, "labels", n) })),
+        onNewLabelKey: (e) => { if (e.key === "Enter") this.addLabel(s.labelDraft, m.key); },
+        callChip: Object.assign(this.chip("Call", s.logType === "Call"), { onPick: () => this.set({ logType: "Call" }) }),
+        meetingChip: Object.assign(this.chip("Meeting", s.logType === "Meeting"), { onPick: () => this.set({ logType: "Meeting" }) }),
+        focusChip: Object.assign(this.chip("Focus", s.logType === "Focus"), { onPick: () => this.set({ logType: "Focus" }) }),
+        multiChip: Object.assign(this.chip("Multitasking", s.logType === "Multitasking"), { onPick: () => this.set({ logType: "Multitasking" }) }),
+        objRows, objCount: m.objectives.length, outCount: m.outcomes.length,
+        outRows: s.outcomes.map(o => { const on = m.outcomes.includes(o.name); return { name: o.name, bg: on ? "var(--surf2)" : "var(--surf)", boxBorder: on ? "var(--ink)" : "var(--line)", boxBg: on ? "var(--ink)" : "var(--surf)", onToggle: () => this.toggleIn(m.key, "outcomes", o.name) }; }),
+        onTitle: setField("title"), onDesc: setField("desc"), onObstacles: setField("obstacles"), onDateline: setField("dateline"),
+        onDraftText: (e) => this.set({ draft: Object.assign({}, s.draft, { text: e.target.value }) }),
+        onDraftHours: (e) => this.set({ draft: Object.assign({}, s.draft, { hours: e.target.value.replace(/[^0-9.]/g, "") }) }),
+        onAddLog: () => {
+          const p = this.parse(s.draft.text);
+          if (!p.note && !p.artefacts.length && !p.values.length) return;
+          const date = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
+          this.updTask(m.key, t => ({ log: [{ date, iso: this.isoStr(new Date()), type: s.logType, hours: (s.draft.hours || "").trim(), note: p.note, artefacts: p.artefacts, values: p.values, people: p.people, outcomes: draftOuts.slice() }].concat(t.log) }));
+          this.set({ draft: { text: "", outcomes: [], hours: "" } });
+        },
+        onClose: () => this.set({ modalKey: null }),
+      };
+      Object.assign(modal, this.holdProps("task:" + m.key, () => { this.updTask(m.key, { archived: true }); this.set({ modalKey: null }); }));
+    }
+    const killLane = s.laneKill ? this.lanesDef().find(l => l.id === s.laneKill) : null;
+    let laneKill = null;
+    if (killLane) {
+      const moving = live.filter(t => t.lane === killLane.id);
+      const tgt = s.killTarget && s.killTarget !== "intake" ? this.lanesDef().find(l => l.id === s.killTarget) : null;
+      const opts = this.lanesDef().filter(l => l.id !== killLane.id).concat([{ id: "intake", name: "Intake", cols: [] }]);
+      laneKill = {
+        name: killLane.name, color: this.laneColor(killLane.id),
+        summary: moving.length + (moving.length === 1 ? " card needs a new home." : " cards need a new home."),
+        targets: opts.map(o => {
+          const on = s.killTarget === o.id;
+          return {
+            name: o.name, count: live.filter(t => t.lane === o.id).length, color: this.laneColor(o.id),
+            bg: on ? "var(--surf3)" : "var(--surf)", dotBorder: on ? "var(--ink)" : "var(--ink4)", dotBg: on ? "var(--ink)" : "var(--surf)",
+            onPick: () => this.set({ killTarget: o.id }),
+          };
+        }),
+        intakeNote: !tgt,
+        onCancel: () => this.set({ laneKill: null, killTarget: null }),
+        onConfirm: () => this.deleteLane(killLane.id, s.killTarget),
+      };
+    }
+    const activeFilterCount = Object.keys(s.labelFilter).length + Object.keys(s.prioFilter).length + (s.obstacleFilter ? 1 : 0) + (s.sevFilter ? 1 : 0) + Object.keys(s.objFilter).length;
+    const maxContribs = Math.max.apply(null, s.outcomes.map(o => this.outContribs(o.name)).concat([1]));
+    return {
+      isDark: s.theme === "dark", isLight: s.theme !== "dark",
+      themeTitle: s.theme === "dark" ? "Switch to light theme" : "Switch to dark theme",
+      toggleTheme: () => this.toggleTheme(),
+      intakeH, colWidth: this.colW(), intakeCardW: this.colW() - 20,
+      totalCount: live.length, visibleCount: visible.length, contribCount: this.contribs(live),
+      search: s.search, onSearch: (e) => this.set({ search: e.target.value }),
+      filtersOpen: s.filtersOpen, toggleFilters: () => this.set({ filtersOpen: !s.filtersOpen }), activeFilterCount, hasFilters: activeFilterCount > 0 || !!s.search,
+      clearFilters: () => this.set({ search: "", labelFilter: {}, prioFilter: {}, obstacleFilter: false, sevFilter: false, objFilter: {} }),
+      labelChips: s.allLabels.map((n, i) => Object.assign({ name: n }, this.labelStyle(n, !!s.labelFilter[n]), {
+        editing: s.labelEdit, notEditing: !s.labelEdit,
+        onToggle: () => this.toggleKey("labelFilter", n),
+        onRename: (e) => this.renameLabel(i, e.target.value),
+        onRemove: () => this.removeLabel(i),
+      })),
+      labelEdit: s.labelEdit, labelEditText: s.labelEdit ? "Done" : "Edit labels", toggleLabelEdit: () => this.set({ labelEdit: !s.labelEdit, labelDraft: "" }),
+      labelDraft: s.labelDraft, onLabelDraft: (e) => this.set({ labelDraft: e.target.value }),
+      onLabelDraftKey: (e) => { if (e.key === "Enter") this.addLabel(s.labelDraft); },
+      prioChips: ["P1", "P2", "P3"].map(n => Object.assign(this.prioChip(n, !!s.prioFilter[n]), { onToggle: () => this.toggleKey("prioFilter", n) })),
+      obstacleChip: this.chip("", s.obstacleFilter), toggleObstacleFilter: () => this.set({ obstacleFilter: !s.obstacleFilter }),
+      sevChip: this.chip("", s.sevFilter), toggleSevFilter: () => this.set({ sevFilter: !s.sevFilter }),
+      objChips: tree.map(o => Object.assign(this.chip(o.name, !!s.objFilter[o.name]), {
+        title: s.objFilter[o.name] ? "Remove from filter" : "Add to filter",
+        onToggle: () => this.setState(st => { const f = Object.assign({}, st.objFilter); if (f[o.name]) delete f[o.name]; else f[o.name] = true; return { objFilter: f, filtersOpen: true }; }),
+      })),
+      objYears,
+      collapsePanel: () => this.set({ panelOpen: false }),
+      onAddObjective: () => this.addObjective(), onAddOutcome: () => this.addOutcome(),
+      panelOpen: s.panelOpen,
+      showObjectives: s.tool === "objectives", showOutcomes: s.tool === "outcomes", showLog: s.tool === "log",
+      panelW: s.tool === "log" ? 560 : s.tool === "outcomes" ? (s.outEdit ? 860 : 460) : (s.objEdit ? 900 : 520),
+      toolObj: this.toolChip("objectives"), toolOut: this.toolChip("outcomes"), toolLog: this.toolChip("log"),
+      logPanel: (() => {
+        const scope = s.logScope, anchor = s.logAnchor, r = this.logRange(scope, anchor);
+        const all = this.allLog(), inR = all.filter(e => e.iso >= r.from && e.iso <= r.to);
+        const sum = (es) => es.reduce((a, e) => a + e.hours, 0);
+        const tone = { Focus: "var(--ink)", Meeting: "var(--accent)", Call: "var(--lane2)", Multitasking: "var(--warn)" };
+        const y = this.dObj(anchor).getFullYear();
+        let buckets = [], days = [];
+        if (scope === "Year") {
+          buckets = this.LOG_MONTHS().map((mn, i) => {
+            const f = y + "-" + String(i + 1).padStart(2, "0") + "-01", t = this.isoStr(new Date(y, i + 1, 0));
+            const es = all.filter(e => e.iso >= f && e.iso <= t);
+            return { label: mn, n: es.length, hrs: sum(es), goTo: f, next: "Month" };
+          });
+        } else if (scope === "Month") {
+          for (let cur = this.weekStart(r.from); cur <= r.to; cur = this.addDays(cur, 7)) {
+            const end = this.addDays(cur, 6), es = all.filter(e => e.iso >= cur && e.iso <= end);
+            buckets.push({ label: this.fmtShort(cur) + " – " + this.fmtShort(end), n: es.length, hrs: sum(es), goTo: cur, next: "Week" });
+          }
+        } else {
+          for (let cur = r.from; cur <= r.to; cur = this.addDays(cur, 1)) {
+            const es = inR.filter(e => e.iso === cur);
+            if (!es.length) continue;
+            days.push({
+              label: this.fmtWeekday(cur), summary: es.length + " · " + sum(es).toFixed(1) + "h",
+              entries: es.map(e => ({
+                type: e.type, typeColor: tone[e.type] || "var(--ink2)", hours: e.hours ? e.hours + "h" : "",
+                taskTitle: e.taskTitle, note: String(e.note).replace(/!\[[^\]]*\]\([^)]*\)/g, "").replace(/[*`#>]/g, "").trim(),
+                hasOutcomes: e.outcomes.length > 0, outcomes: e.outcomes.map(name => ({ name })),
+                onOpen: () => this.set({ modalKey: e.taskKey }),
+              })),
+            });
+          }
+        }
+        const maxN = Math.max(1, ...buckets.map(b => b.n));
+        const shift = (dir) => {
+          const d = this.dObj(anchor);
+          if (scope === "Day") return this.set({ logAnchor: this.addDays(anchor, dir) });
+          if (scope === "Week") return this.set({ logAnchor: this.addDays(this.weekStart(anchor), dir * 7) });
+          if (scope === "Month") return this.set({ logAnchor: this.isoStr(new Date(d.getFullYear(), d.getMonth() + dir, 1)) });
+          return this.set({ logAnchor: this.isoStr(new Date(d.getFullYear() + dir, 0, 1)) });
+        };
+        return {
+          scopes: ["Year", "Month", "Week", "Day"].map(n => ({ name: n, bg: scope === n ? "var(--ink)" : "transparent", color: scope === n ? "var(--on-ink)" : "var(--ink2)", onPick: () => this.set({ logScope: n }) })),
+          label: scope === "Year" ? String(y) : scope === "Month" ? ["January","February","March","April","May","June","July","August","September","October","November","December"][this.dObj(anchor).getMonth()] + " " + y
+            : scope === "Week" ? this.fmtShort(r.from) + " – " + this.fmtShort(r.to) + ", " + y : this.fmtWeekday(anchor) + ", " + y,
+          count: inR.length, hours: sum(inR).toFixed(1), contribs: inR.filter(e => e.outcomes.length).length,
+          types: ["Focus", "Meeting", "Call", "Multitasking"].map(n => { const c = inR.filter(e => e.type === n).length; return { name: n, n: c, w: inR.length ? c / inR.length * 100 : 0, color: tone[n] }; }).filter(x => x.n),
+          buckets: buckets.map(b => ({
+            label: b.label, w: b.n / maxN * 100, countLabel: b.n ? b.n + " entries" : "—",
+            hoursLabel: b.hrs ? b.hrs.toFixed(1) + "h" : "", tone: b.n ? "var(--ink)" : "var(--ink4)",
+            onDrill: () => this.set({ logScope: b.next, logAnchor: b.goTo }),
+          })),
+          days, empty: !buckets.length && !days.length,
+          onPrev: () => shift(-1), onNext: () => shift(1), onToday: () => this.set({ logAnchor: this.today() }),
+        };
+      })(),
+      outcomes: s.outcomes.map(o => {
+        const ts = live.filter(t => t.outcomes.includes(o.name)), c = this.outContribs(o.name);
+        return { name: o.name, desc: o.desc, date: this.fmtDate(o.date), color: "var(--accent)", onEdit: () => this.editOutcome(o.name), taskCountLabel: ts.length + (ts.length === 1 ? " task" : " tasks"), bg: s.outEdit && s.outEdit.key === o.name ? "var(--surf3)" : "transparent", taskCount: ts.length, contribs: c, contribPct: pct(c, maxContribs), objName: o.objective };
+      }),
+      selectAll: (e) => e.target.select(),
+      allowDrop: (e) => { e.preventDefault(); e.dataTransfer.dropEffect = "move"; },
+      intake: {
+        count: intakeCards.length, open: !s.collapsedLanes.intake, chevron: s.collapsedLanes.intake ? "▶" : "▼", cards: intakeCards, empty: intakeCards.length === 0,
+        onToggle: () => this.toggleKey("collapsedLanes", "intake"),
+        onDrop: (e) => { e.preventDefault(); const d = this.state.drag; if (!d) return; const r = e.currentTarget.getBoundingClientRect(); const el = e.currentTarget, x = Math.max(0, Math.min(Math.max(0, el.scrollWidth - this.colW() + 8), e.clientX - r.left + el.scrollLeft - d.ox)), y = Math.max(0, Math.min(Math.max(0, el.scrollHeight - 44), e.clientY - r.top + el.scrollTop - d.oy)); this.updTask(d.key, { lane: "intake", col: "", x: Math.round(x), y: Math.round(y) }); this.state.drag = null; },
+        onDblAdd: (e) => { const r = e.currentTarget.getBoundingClientRect(); const el = e.currentTarget, x = Math.max(0, Math.min(Math.max(0, el.scrollWidth - this.colW() + 8), e.clientX - r.left + el.scrollLeft - 12)), y = Math.max(0, Math.min(Math.max(0, el.scrollHeight - 44), e.clientY - r.top + el.scrollTop - 12)); this.addTask("intake", "", "", Math.round(x), Math.round(y)); },
+        onResizeStart: (e) => {
+          e.preventDefault();
+          const startY = e.clientY, startH = intakeH;
+          const move = (ev) => this.setState({ intakeH: Math.max(96, Math.min(2400, startH + ev.clientY - startY)) });
+          const up = () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
+          window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
+        },
+      },
+      lanes, modalOpen: !!m, modal, stop: (e) => e.stopPropagation(),
+      onAddLane: () => this.addLane(), noLanes: this.lanesDef().length === 0,
+      leftWidth: s.objEdit ? 900 : 520, objEditOpen: !!s.objEdit,
+      rightWidth: s.outEdit ? 860 : 460, outEditOpen: !!s.outEdit,
+      outEdit: (() => {
+        const d = s.outEdit;
+        if (!d) return null;
+        const patch = (p, commit) => this.setState(st => ({ outEdit: Object.assign({}, st.outEdit, p) }), commit ? () => this.saveOutcome(false) : undefined);
+        const refs = live.filter(t => (t.outcomes || []).includes(d.key)).length;
+        return {
+          name: d.name, objective: d.objective, desc: d.desc, date: d.date,
+          onName: (e) => patch({ name: e.target.value }),
+          onNameCommit: () => this.saveOutcome(false),
+          onObjective: (e) => patch({ objective: e.target.value }, true),
+          onDesc: (e) => patch({ desc: e.target.value }, true),
+          onDate: (e) => patch({ date: e.target.value }, true),
+          objectiveRows: [{ name: "— unassigned —", value: "", level: 0, horizon: "" }].concat(tree.map(o => ({ name: o.name, value: o.name, level: o.level, horizon: o.horizon }))).map(o => {
+            const on = (d.objective || "") === o.value;
+            return {
+              name: o.name, horizon: o.horizon, indent: 10 + o.level * 14,
+              weight: o.level === 0 ? 600 : 400,
+              bg: on ? "var(--accent-wash)" : "var(--surf)",
+              dot: on ? "var(--ink)" : "transparent", dotBorder: on ? "var(--ink)" : "var(--ink4)",
+              onPick: () => patch({ objective: o.value }, true),
+            };
+          }),
+          refs: refs + (refs === 1 ? " card" : " cards"),
+          onClose: () => this.saveOutcome(true),
+        };
+      })(),
+      objEdit: (() => {
+        const d = s.objEdit;
+        if (!d) return null;
+        const fam = this.objChildren(d.key);
+        const patch = (p, commit) => this.setState(st => ({ objEdit: Object.assign({}, st.objEdit, p) }), commit ? () => this.saveObjective(false) : undefined);
+        const refs = live.filter(t => (t.objectives || []).some(x => fam.includes(x))).length;
+        return Object.assign(this.holdProps("obj:" + d.key, () => this.archiveObjective()), {
+          name: d.name, parent: d.parent, measure: d.measure,
+          onName: (e) => patch({ name: e.target.value }),
+          onNameCommit: () => this.saveObjective(false),
+          onParent: (e) => patch({ parent: e.target.value }, true),
+          onMeasure: (e) => patch({ measure: e.target.value }, true),
+          parentOptions: [{ value: "", label: "— top level —" }].concat(s.objectives.filter(o => !o.archived && fam.indexOf(o.name) < 0).map(o => ({ value: o.name, label: o.name }))),
+          horizonLabel: this.horizonFor(d.parent ? this.objDepth(d.parent) + 1 : 0),
+          outcomeRows: s.outcomes.map(o => {
+            const on = (d.outs || []).indexOf(o.name) >= 0, elsewhere = !on && o.objective && o.objective !== d.key;
+            return {
+              name: o.name, check: on ? "✓" : "",
+              bg: on ? "var(--accent-wash)" : "var(--surf)",
+              boxBorder: on ? "var(--ink)" : "var(--ink4)", boxBg: on ? "var(--ink)" : "var(--surf)",
+              note: "",
+              noteColor: elsewhere ? "var(--warn)" : "var(--ink3)",
+              onToggle: () => {
+                const cur = this.state.objEdit.outs || [];
+                patch({ outs: cur.indexOf(o.name) >= 0 ? cur.filter(x => x !== o.name) : cur.concat([o.name]) }, true);
+              },
+            };
+          }),
+          refs: refs + (refs === 1 ? " card" : " cards"),
+          onClose: () => this.saveObjective(true),
+          onNewOutcome: () => this.newOutcomeFor(d.key),
+        });
+      })(), laneKillOpen: !!laneKill, laneKill,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "name": "better-tracker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Single-user work-tracking board. Local-only: Vite SPA + Node API + SQLite.",
+  "engines": {
+    "node": ">=24"
+  },
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:api dev:web",
+    "up": "bash scripts/dev.sh start",
+    "down": "bash scripts/dev.sh stop",
+    "restart": "bash scripts/dev.sh restart",
+    "ps": "bash scripts/dev.sh status",
+    "logs": "bash scripts/dev.sh logs",
+    "dev:api": "npm run dev --workspace apps/api",
+    "dev:web": "npm run dev --workspace apps/web",
+    "build": "npm run build --workspace apps/web",
+    "start": "npm run build && npm run start --workspace apps/api",
+    "db:reset": "node apps/api/src/cli/reset.ts",
+    "seed:demo": "node apps/api/src/cli/seed-demo.ts",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "BT_DB_PATH=:memory: node --test apps/api/test/*.test.ts"
+  },
+  "devDependencies": {
+    "npm-run-all2": "^8.0.4",
+    "typescript": "^5.9.3"
+  }
+}

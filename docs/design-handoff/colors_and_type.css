@@ -1,0 +1,209 @@
+/* =============================================================
+   Meridian Operations Group — Foundations
+   Color, type, spacing, and elevation tokens.
+   Import once at the top of any document.
+   ============================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
+
+:root {
+  /* ----- Color: structural ----- */
+  --charcoal:        #1f2937;  /* primary text, headlines, axes */
+  --slate:           #475569;  /* secondary text, body at smaller sizes */
+  --graphite:        #64748b;  /* tertiary text, captions, footnotes */
+  --bg-canvas:       #fafaf9;  /* default page bg — never pure white */
+  --bg-surface:      #ffffff;  /* card surfaces, table cells */
+  --border-hairline: #e2e8f0;  /* 1px structural divider */
+
+  /* ----- Color: accents (use sparingly) ----- */
+  --teal-deep:       #0f766e;  /* primary accent — section markers, key callouts */
+  --teal-soft:       #ccfbf1;  /* tint behind primary callouts */
+  --amber-muted:     #b45309;  /* risk flags, attention items */
+  --amber-soft:      #fef3c7;  /* tint for warning blocks */
+  --forest-green:    #15803d;  /* positive variance only */
+  --green-soft:      #dcfce7;  /* positive variance tint */
+  --rust-red:        #9f1239;  /* negative variance, deteriorating metrics */
+  --rust-soft:       #fee2e2;  /* negative variance tint */
+
+  /* ----- Semantic color aliases ----- */
+  --fg-1:            var(--charcoal);
+  --fg-2:            var(--slate);
+  --fg-3:            var(--graphite);
+  --fg-inverse:      #ffffff;
+  --bg-page:         var(--bg-canvas);
+  --bg-card:         var(--bg-surface);
+  --border:          var(--border-hairline);
+  --border-strong:   var(--charcoal);
+  --accent:          var(--teal-deep);
+  --accent-bg:       var(--teal-soft);
+  --positive:        var(--forest-green);
+  --positive-bg:     var(--green-soft);
+  --warning:         var(--amber-muted);
+  --warning-bg:      var(--amber-soft);
+  --negative:        var(--rust-red);
+  --negative-bg:     var(--rust-soft);
+
+  /* ----- Type: families ----- */
+  --font-sans:       "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono:       "IBM Plex Mono", "Roboto Mono", Consolas, monospace;
+
+  /* ----- Type: scale ----- */
+  --fs-h1:           2.25rem;   /* 36px */
+  --fs-h2:           1.75rem;   /* 28px */
+  --fs-h3:           1.375rem;  /* 22px */
+  --fs-h4:           1.125rem;  /* 18px */
+  --fs-body:         1rem;      /* 16px */
+  --fs-small:        0.875rem;  /* 14px */
+  --fs-caption:      0.75rem;   /* 12px */
+  --fs-metric-hero:  3rem;      /* 48px */
+  --fs-metric-std:   2rem;      /* 32px */
+
+  /* ----- Type: weights ----- */
+  --fw-regular:      400;
+  --fw-medium:       500;
+  --fw-semibold:     600;
+  --fw-bold:         700;
+
+  /* ----- Type: line heights ----- */
+  --lh-tight:        1.1;
+  --lh-snug:         1.2;
+  --lh-normal:       1.4;
+  --lh-relaxed:      1.5;
+
+  /* ----- Type: tracking ----- */
+  --tr-tightest:     -0.02em;
+  --tr-tighter:      -0.01em;
+  --tr-tight:        -0.005em;
+  --tr-normal:       0;
+  --tr-loose:        0.01em;
+  --tr-caps:         0.05em;
+
+  /* ----- Spacing (base unit 4px) ----- */
+  --space-1:         4px;
+  --space-2:         8px;
+  --space-3:         12px;
+  --space-4:         16px;
+  --space-6:         24px;
+  --space-8:         32px;
+  --space-12:        48px;
+  --space-16:        64px;
+
+  /* ----- Radii (never higher than 4px) ----- */
+  --radius-sm:       2px;
+  --radius:          4px;
+
+  /* ----- Elevation (barely-perceptible only) ----- */
+  --shadow-none:     none;
+  --shadow-1:        0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+/* =============================================================
+   Base reset + element defaults
+   ============================================================= */
+
+html, body {
+  background: var(--bg-page);
+  color: var(--fg-1);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-relaxed);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ----- Headings ----- */
+h1, .h1 {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tr-tighter);
+  color: var(--fg-1);
+  margin: 0;
+}
+h2, .h2 {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  line-height: 1.25;
+  letter-spacing: var(--tr-tight);
+  color: var(--fg-1);
+  margin: 0;
+}
+h3, .h3 {
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-semibold);
+  line-height: 1.3;
+  letter-spacing: var(--tr-normal);
+  color: var(--fg-1);
+  margin: 0;
+}
+h4, .h4 {
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-normal);
+  color: var(--fg-1);
+  margin: 0;
+}
+
+/* ----- Body + supporting ----- */
+p, .body {
+  font-size: var(--fs-body);
+  line-height: var(--lh-relaxed);
+  color: var(--fg-1);
+  margin: 0;
+}
+.small {
+  font-size: var(--fs-small);
+  line-height: var(--lh-relaxed);
+  color: var(--fg-2);
+}
+.caption {
+  font-size: var(--fs-caption);
+  line-height: var(--lh-normal);
+  letter-spacing: var(--tr-loose);
+  color: var(--fg-3);
+}
+
+/* ----- Numeric / mono ----- */
+.mono, code, kbd, samp {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1;
+}
+.metric-hero {
+  font-family: var(--font-mono);
+  font-size: var(--fs-metric-hero);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tr-tightest);
+  color: var(--fg-1);
+}
+.metric-std {
+  font-family: var(--font-mono);
+  font-size: var(--fs-metric-std);
+  font-weight: var(--fw-bold);
+  line-height: 1.15;
+  letter-spacing: var(--tr-tighter);
+  color: var(--fg-1);
+}
+
+/* ----- Pill / table-header all-caps ----- */
+.eyebrow,
+.col-header {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tr-caps);
+  color: var(--fg-1);
+}
+
+/* =============================================================
+   Section marker — 4px teal bar above H2 sections
+   ============================================================= */
+.section-marker {
+  display: block;
+  width: 64px;
+  height: 4px;
+  background: var(--teal-deep);
+  margin-bottom: var(--space-4);
+}
